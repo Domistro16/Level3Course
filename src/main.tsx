@@ -11,14 +11,12 @@ import React, { useEffect, useRef, useState } from "react";
 import "@rainbow-me/rainbowkit/styles.css";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { web3AuthOptions } from "@/web3auth";
+import { Web3AuthProvider } from "node_modules/@web3auth/modal/dist/lib.cjs/types/react/Web3AuthProvider";
+import { WagmiProvider } from "node_modules/@web3auth/modal/dist/lib.cjs/types/react/wagmi/provider";
 
 function BootStrap() {
   const queryClient = new QueryClient();
 
-  const [Web3AuthComponents, setWeb3AuthComponents] = useState<{
-    Web3AuthProvider: any;
-    WagmiProvider: any;
-  } | null>(null);
   const [synced, setSynced] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -50,25 +48,8 @@ function BootStrap() {
     return () => window.removeEventListener("message", onMessage);
   }, []);
 
-  useEffect(() => {
-    if (synced) {
-      console.log("Starting dynamic import...");
-      import("@web3auth/modal/react")
-        .then((mod) => {
-          import("@web3auth/modal/react/wagmi").then((wagmiMod) => {
-            setWeb3AuthComponents({
-              Web3AuthProvider: mod.Web3AuthProvider,
-              WagmiProvider: wagmiMod.WagmiProvider,
-            });
-          });
-        })
-        .catch((err) => {
-          console.error("Dynamic import failed:", err);
-        });
-    }
-  }, [synced]);
 
-  if (!synced || !Web3AuthComponents) {
+  if (!synced) {
     return (
       <iframe
         ref={iframeRef}
@@ -78,8 +59,6 @@ function BootStrap() {
       />
     );
   }
-
-  const { Web3AuthProvider, WagmiProvider } = Web3AuthComponents;
 
   const web3authContextConfig: any = {
     web3AuthOptions: web3AuthOptions,
