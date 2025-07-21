@@ -1,6 +1,5 @@
 import { FaDiscord, FaFacebookF, FaGoogle, FaXTwitter } from "react-icons/fa6";
-import { useWeb3AuthConnect } from "@web3auth/modal/react";
-import { WALLET_CONNECTORS, AUTH_CONNECTION } from "@web3auth/modal";
+import { web3auth } from "@/web3authHooks";
 import React, { useEffect, useRef, useState } from "react";
 
 export default function SignIn({
@@ -10,12 +9,12 @@ export default function SignIn({
   loggedIn: boolean;
   setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { connectTo, isConnected, error, connect } = useWeb3AuthConnect();
   const [email, setEmail] = useState("");
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [available, setAvailable] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-
+  const { connectTo, error, connect, isConnected } =
+    web3auth.useWeb3AuthConnect();
   const handleClickOutside = (event: MouseEvent) => {
     console.log("b");
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -34,55 +33,34 @@ export default function SignIn({
     };
   }, [available, loggedIn]);
 
-  const save = () => {
-    // Check if the user is already connected
-    const iframe = iframeRef.current;
-    if (iframe) {
-      console.log('loaded')
-      iframe.onload = () => {
-        iframe.contentWindow?.postMessage(
-          JSON.stringify({ type: "SET_SESSION", object: localStorage }),
-          "http://localhost:5175"
-        );
-      };
-    }
-
-    setLoggedIn(!loggedIn);
-    setAvailable(true);
-  };
-
   const loginWithGoogle = () => {
-    connectTo(WALLET_CONNECTORS.AUTH, {
-      authConnection: AUTH_CONNECTION.GOOGLE,
+    connectTo("auth", {
+      authConnection: "google",
     });
   };
   const loginWithEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    await connectTo(WALLET_CONNECTORS.AUTH, {
-      authConnection: AUTH_CONNECTION.EMAIL_PASSWORDLESS, // :contentReference[oaicite:7]{index=7}
+    await connectTo("auth", {
+      authConnection: "email-passwordless", // :contentReference[oaicite:7]{index=7}
       authConnectionId: "level3-test-demo",
       extraLoginOptions: { login_hint: email.trim() }, // :contentReference[oaicite:8]{index=8}
     });
- 
   };
   const loginWithTwitter = () => {
-    connectTo(WALLET_CONNECTORS.AUTH, {
-      authConnection: AUTH_CONNECTION.TWITTER,
+    connectTo("auth", {
+      authConnection: "twitter",
     });
-
   };
   const loginWithDiscord = () => {
-    connectTo(WALLET_CONNECTORS.AUTH, {
-      authConnection: AUTH_CONNECTION.DISCORD,
+    connectTo("auth", {
+      authConnection: "discord",
     });
-
   };
   const loginWithFacebook = () => {
-    connectTo(WALLET_CONNECTORS.AUTH, {
-      authConnection: AUTH_CONNECTION.FACEBOOK,
+    connectTo("auth", {
+      authConnection: "facebook",
     });
-  
   };
 
   const socialButtons = [
@@ -105,7 +83,7 @@ export default function SignIn({
     <div>
       <iframe
         ref={iframeRef}
-        src="http://localhost:5175/"
+        src="https://auth.level3labs.fun/"
         style={{ display: "none" }}
         title="session-sync"
       />
@@ -117,7 +95,7 @@ export default function SignIn({
         {/* Modal container */}
         <div
           ref={modalRef}
-          className="w-11/12 max-w-6xl h-[74%] md:h-[90%] bg-stone-900 rounded-2xl shadow-lg overflow-auto md:overflow-hidden flex flex-col md:flex-row mx-auto pb-20"
+          className="w-11/12 max-w-6xl h-[74%] md:h-[90%] opacity-85 bg-[url('/bg.png')] rounded-2xl shadow-lg overflow-auto md:overflow-hidden flex flex-col md:flex-row mx-auto pb-20"
         >
           {/* Left Column */}
           <div className="w-full md:w-1/2 border-b md:border-b-0 md:border-r border-white/10 p-6 md:p-10 flex flex-col">
@@ -133,7 +111,7 @@ export default function SignIn({
                 id="email"
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="mariagarcia@gmail.com"
-                className="w-full p-3 bg-input border border-input rounded-lg text-white mb-6 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full p-3 bg-transparent border border-input rounded-lg text-white mb-6 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
               <button
                 type="submit"

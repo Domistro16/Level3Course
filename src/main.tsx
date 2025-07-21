@@ -6,18 +6,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
 import "@rainbow-me/rainbowkit/styles.css";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import {
-  Web3AuthProvider,
-  type Web3AuthContextConfig,
-} from "@web3auth/modal/react";
-import { WagmiProvider } from "@web3auth/modal/react/wagmi";
 import { web3AuthOptions } from "@/web3auth";
 
 function BootStrap() {
   const queryClient = new QueryClient();
-  const web3authContextConfig: Web3AuthContextConfig = {
-    web3AuthOptions: web3AuthOptions,
-  };
+
+  const [Web3AuthComponents, setWeb3AuthComponents] = useState<{
+    Web3AuthProvider: any;
+    WagmiProvider: any;
+  } | null>(null);
   const [synced, setSynced] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -49,7 +46,21 @@ function BootStrap() {
     return () => window.removeEventListener("message", onMessage);
   }, []);
 
-  if (!synced) {
+  useEffect(() => {
+    if (synced) {
+      import("@web3auth/modal/react").then((mod) => {
+        console.log("b");
+        import("@web3auth/modal/react/wagmi").then((wagmiMod) => {
+          setWeb3AuthComponents({
+            Web3AuthProvider: mod.Web3AuthProvider,
+            WagmiProvider: wagmiMod.WagmiProvider,
+          });
+        });
+      });
+    }
+  }, [synced]);
+
+  if (!synced || !Web3AuthComponents) {
     return (
       <iframe
         ref={iframeRef}
@@ -59,6 +70,12 @@ function BootStrap() {
       />
     );
   }
+
+  const { Web3AuthProvider, WagmiProvider } = Web3AuthComponents;
+
+  const web3authContextConfig: any = {
+    web3AuthOptions: web3AuthOptions,
+  };
   return (
     <Web3AuthProvider config={web3authContextConfig}>
       <QueryClientProvider client={queryClient}>

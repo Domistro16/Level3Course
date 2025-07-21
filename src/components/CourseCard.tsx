@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +15,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getParticipants } from "@/lib/utils";
-import { Course } from "@/constants";
+import { abi, Course, Deploy } from "@/constants";
+import { useAccount, useReadContract } from "wagmi";
 
 const iconMap = {
   Target,
@@ -30,6 +31,14 @@ export const getRandomIcon = (title: string): LucideIcon => {
   const index = hash % iconKeys.length;
   return iconMap[iconKeys[index]];
 };
+type UserType = [
+  Course, // replace with the actual structure or use `any` if unknown
+  boolean,
+  number,
+  string[], // or `any[]` if it's not an array of strings
+  bigint
+];
+
 
 const CourseCard = ({
   course,
@@ -41,8 +50,25 @@ const CourseCard = ({
   const IconComponent = getRandomIcon(course.title) || Target;
   // Mock enrollment for card display: For demo, let's assume no course is pre-enrolled on general cards
   // Actual enrollment state would come from user context or props
-  const isEnrolled = false;
+  const {address} = useAccount()
+  const { data: userCourse, isPending: userLoading } = useReadContract({
+    abi: abi,
+    functionName: "getCourse",
+    address: Deploy,
+    args: [Number(course.id), address],
+  }) as {
+    data: UserType;
+    isPending: boolean;
+  };
+
+  const [isEnrolled, setIsEnrolled] = useState(false); // Mock state
   const participants = getParticipants(Number(course.id));
+  useEffect(() => {
+    if (userCourse && Symbol.iterator in Object(userCourse)) {
+      const [, isActive] = userCourse;
+      setIsEnrolled(isActive);
+    }
+  }, [userCourse]);
 
   return (
     <motion.div

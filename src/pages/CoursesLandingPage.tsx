@@ -4,7 +4,7 @@ import { BookOpen, Filter, ArrowRight, Sparkles, Info } from "lucide-react";
 import { Link } from "react-router-dom";
 import CourseCard from "@/components/CourseCard";
 import FaqSection from "@/components/FaqSection"; // Import the new FAQ section
-import { abi, Deploy, type Course, type Lesson } from "@/constants";
+import { abi, Deploy, type Course } from "@/constants";
 import { useReadContract, useAccount } from "wagmi";
 
 const CoursesLandingPage = () => {

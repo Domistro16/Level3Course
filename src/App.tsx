@@ -7,15 +7,13 @@ import CourseListPage from "@/pages/CourseListPage";
 import CourseDetailPage from "@/pages/CourseDetailPage";
 import ScrollToTop from "@/components/ScrollToTop";
 import CreatorDomainSection from "@/components/CreatorDomainSection";
-import { useWeb3Auth } from "@web3auth/modal/react";
 import { useEffect, useRef } from "react";
+import LessonPlayer from "@/pages/LessonPage";
+import { web3auth} from "@/web3authHooks";
 
 function App() {
-  const { status } = useWeb3Auth();
-
-  const { isConnected } = useWeb3Auth();
   const iframeRef = useRef<HTMLIFrameElement>(null);
-
+  const {status, isConnected} = web3auth.useWeb3Auth()
   useEffect(() => {
     // Check if the user is already connected
     if (isConnected) {
@@ -57,6 +55,10 @@ function App() {
               <Route
                 path="/mint-creator-domain"
                 element={<CreatorDomainSection isPage={true} />}
+              />
+              <Route
+                path="/courses/lesson/:courseId/:id"
+                element={<LessonPlayer />}
               />
             </Routes>
           </main>

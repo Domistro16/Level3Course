@@ -1,15 +1,8 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Target, Play, Rocket, Brain, ArrowRight, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const iconMap = {
-  Target,
-  Play,
-  Rocket,
-  Brain
-};
 
 const CoursesSection = ({ courses, title = "AI-Powered Learning Hub", subtitle, isHomePage = false }) => {
   const defaultSubtitle = isHomePage 
@@ -36,10 +29,9 @@ const CoursesSection = ({ courses, title = "AI-Powered Learning Hub", subtitle, 
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
           {displayedCourses.map((course, index) => {
-            const IconComponent = iconMap[course.icon] || Target;
+            const IconComponent = Target;
             // For consistency, all cards in this section will show the "View Details" / "Mint to enroll" state
             // The isEnrolledInCourse logic was specific to demoing one card differently, which we're removing.
-            const enrolled = false; 
             return (
               <motion.div
                 key={course.id || index}

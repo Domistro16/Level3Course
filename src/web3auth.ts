@@ -1,12 +1,8 @@
-import {
-  WEB3AUTH_NETWORK,
-  Web3AuthOptions,
-} from '@web3auth/modal'
 
-export const web3AuthOptions: Web3AuthOptions = {
+export const web3AuthOptions: any = {
   clientId: import.meta.env.CLIENT_ID || import.meta.env.VITE_CLIENT_ID,
-  web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
-  defaultChainId: '0x61',
+  web3AuthNetwork: "sapphire_devnet",
+  defaultChainId: "0x61",
   uiConfig: {
     mode: "dark",
     defaultLanguage: "en",
@@ -14,4 +10,4 @@ export const web3AuthOptions: Web3AuthOptions = {
       primary: "#768729",
     },
   },
-}
+};

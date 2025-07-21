@@ -1,20 +1,20 @@
-import ReactModal from 'react-modal'
-import { XIcon, DuplicateIcon, LogoutIcon } from '@heroicons/react/outline'
-import { useNavigate } from 'react-router-dom'
-import { Avatar } from '@/components/useAvatar'
-import { useAccount } from 'wagmi'
-import { useDisconnect } from 'wagmi'
-import { useRef } from 'react'
-import { useWeb3AuthDisconnect } from '@web3auth/modal/react'
+import ReactModal from "react-modal";
+import { XIcon, DuplicateIcon, LogoutIcon } from "@heroicons/react/outline";
+import { Avatar } from "./useAvatar";
+import { useAccount } from "wagmi";
+import { useDisconnect } from "wagmi";
+import { useRef } from "react";
+import { web3auth } from "@/web3authHooks";
+import { FaArrowUpRightFromSquare } from "react-icons/fa6";
 
-ReactModal.setAppElement('#root') // accessibility
+ReactModal.setAppElement("#root"); // accessibility
 
 interface WalletModalProps {
-  isOpen: boolean
-  onRequestClose: () => void
-  address: string
-  name: string
-  balance: string
+  isOpen: boolean;
+  onRequestClose: () => void;
+  address: string;
+  name: string;
+  balance: string;
 }
 export function WalletModal({
   isOpen,
@@ -22,17 +22,16 @@ export function WalletModal({
   name,
   balance,
 }: WalletModalProps) {
-  const short = (addr: string) => addr.slice(0, 4) + '…' + addr.slice(-4)
-  const navigate = useNavigate()
-  const { address: fullAddress } = useAccount()
-  console.log(fullAddress)
-  const { disconnect } = useDisconnect()
-  const authFrameRef = useRef<HTMLIFrameElement>(null)
-  const iframe = authFrameRef.current
-  const { disconnect: disconnectWeb3 } = useWeb3AuthDisconnect()
+  const short = (addr: string) => addr.slice(0, 4) + "…" + addr.slice(-4);
+  const { address: fullAddress } = useAccount();
+  console.log(fullAddress);
+  const { disconnect } = useDisconnect();
+  const authFrameRef = useRef<HTMLIFrameElement>(null);
+  const iframe = authFrameRef.current;
+  const { disconnect: disconnectWeb3 } = web3auth.useWeb3AuthDisconnect();
   const disconnectWithSession = () => {
     if (iframe) {
-      console.log(iframe)
+      console.log(iframe);
       if (iframe.contentWindow) {
         iframe.contentWindow.postMessage(
           JSON.stringify({ type: "CLEAR_SESSION" }),
@@ -40,9 +39,9 @@ export function WalletModal({
         );
       }
     }
-    disconnectWeb3()
-    disconnect()
-  }
+    disconnectWeb3();
+    disconnect();
+  };
   return (
     <>
       <iframe
@@ -62,7 +61,7 @@ export function WalletModal({
   "
         className={`
     relative
-    w-full max-w-115
+    w-full max-w-[480px]
     bg-white rounded-2xl p-6 mx-4
     outline-none shadow-xl
     transform transition-transform duration-300 ease-out
@@ -81,7 +80,7 @@ export function WalletModal({
         <div className="flex justify-center">
           <Avatar
             name={name == "" ? `${fullAddress || ""}` : (name as string)}
-            className="w-15 h-15"
+            className="w-14 h-14"
           />
         </div>
 
@@ -102,24 +101,27 @@ export function WalletModal({
         </p>
 
         {/* Buttons */}
-        <div className="mt-6 flex justify-center gap-4 mx-auto">
+        <div className="mt-6 flex justify-center gap-4 mx-auto items-stretch">
           <button
             onClick={() => navigator.clipboard.writeText(fullAddress as string)}
-            className="flex w-full flex-col items-center justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 cursor-pointer hover:scale-105 duration-200"
+            className="flex w-full flex-col font-semibold items-center justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm  text-gray-700 hover:bg-gray-200 cursor-pointer hover:scale-105 duration-200"
           >
             <DuplicateIcon className="h-5 w-5 text-gray-500" />
             <div>Copy Address</div>
           </button>
-          {name != "" ? (
-            <button
-              onClick={() =>
-                navigate(`/resolve/${name.replace(/\.creator$/, "")}`)
-              }
-              className="flex w-full flex-col items-center justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200 cursor-pointer hover:scale-105 duration-200"
+          {name ? (
+            <a
+              className="w-full rounded-lg bg-gray-100 px-4 py-2 flex flex-col justify-center hover:bg-gray-200 cursor-pointer hover:scale-105 duration-200"
+              href={`https://dns.level3labs.fun/resolve/${name.replace(
+                /\.creator$/,
+                ""
+              )}`}
             >
-              <DuplicateIcon className=" h-5 w-5 text-gray-500" />
-              <div>View Profile</div>
-            </button>
+              <button className="flex flex-col items-center justify-center text-sm font-semibold text-gray-700 space-y-1 ">
+                <FaArrowUpRightFromSquare className="h-3 w-3 text-gray-500" />
+                <div>View Profile</div>
+              </button>
+            </a>
           ) : (
             ""
           )}
@@ -127,7 +129,7 @@ export function WalletModal({
             onClick={() => {
               disconnectWithSession();
             }}
-            className="flex w-full flex-col items-center justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 cursor-pointer hover:scale-105 duration-200"
+            className="flex w-full flex-col items-center font-semibold justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm  text-gray-700 hover:bg-gray-200 cursor-pointer hover:scale-105 duration-200"
           >
             <LogoutIcon className=" h-5 w-5 text-gray-500" />
             <div>Disconnect</div>

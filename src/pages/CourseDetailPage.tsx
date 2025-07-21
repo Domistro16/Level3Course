@@ -26,8 +26,9 @@ import { useAccount, useReadContract } from "wagmi";
 import { abi, Deploy } from "@/constants";
 import { getParticipants } from "@/lib/utils";
 import { useGaslessContractWrite } from "@/lib/useWriteContractMeta";
-import LessonPlayer from "@/components/Lesson";
 import { Progress } from "@/components/ui/progress";
+import { getProgress } from "@/hooks/progress";
+import SignIn from "@/components/Login";
 
 const iconMap = {
   Target,
@@ -78,6 +79,8 @@ const CourseDetailPage = () => {
   const coursePartcipants = getParticipants(Number(courseId));
   const [isEnrolled, setIsEnrolled] = useState(false); // Mock state
   const [lessonIds, setLessonIds] = useState<number[]>([]);
+  const { isDisconnected } = useAccount();
+  const [loggedIn, setLoggedIn] = useState(isDisconnected);
   useEffect(() => {
     if (userCourse && Symbol.iterator in Object(userCourse)) {
       const [, isActive] = userCourse;
@@ -85,7 +88,17 @@ const CourseDetailPage = () => {
     }
   }, [userCourse]);
 
-  console.log(isEnrolled);
+  useEffect(() => {
+    const callUser = async () => {
+      const progress = await getProgress(address as string, Number(courseId));
+      console.log(progress);
+      if (progress && Object.keys(progress).length > 0) {
+        setLessonIds(progress.completedLessons);
+      }
+    };
+    callUser();
+  }, [courseId, address]);
+
   const enroll = async () => {
     await writeContract({
       targetABI: abi as any,
@@ -169,13 +182,6 @@ const CourseDetailPage = () => {
 
   return (
     <div className="min-h-screen crypto-pattern py-12 md:py-16 px-4 sm:px-6 lg:px-8">
-      {typeof id == "number" ? (
-        <div className="fixed top-0 left-0 right-0 bottom-0 bg-black/30 items-center justify-center z-50">
-          <LessonPlayer id={id as number} lessons={course.lessons} setLessonIds={setLessonIds} lessonIds={lessonIds}/>
-        </div>
-      ) : (
-        ""
-      )}
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -342,8 +348,11 @@ const CourseDetailPage = () => {
                         <Button
                           key={idx}
                           variant="secondary"
-                          className="w-full justify-start text-left h-auto py-3"
-                          onClick={() => setId(idx)}
+                          className="w-full justify-start text-left h-auto py-3 disabled:no-cursor-allowed"
+                          onClick={() =>
+                            navigate(`/courses/lesson/${courseId}/${idx}`)
+                          }
+                          disabled={idx > lessonIds.length}
                         >
                           <BookOpen size={18} className="mr-3 text-primary" />
                           <div>
@@ -481,6 +490,7 @@ const CourseDetailPage = () => {
           </motion.section>
         )}
       </div>
+      {loggedIn ? <SignIn loggedIn={loggedIn} setLoggedIn={setLoggedIn} /> : ""}
     </div>
   );
 };

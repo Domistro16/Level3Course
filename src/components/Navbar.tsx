@@ -7,13 +7,14 @@ import { CustomConnect } from "./connectButton";
 import LogInButton from "./LoginButton";
 import { useAccount } from "wagmi";
 import SignIn from "./Login";
-import { MobileNav } from "./mobilenav";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const {isConnected} = useAccount()
+  const { isConnected } = useAccount();
   const [loggedIn, setLoggedIn] = useState(false);
+
+  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,7 +26,11 @@ const Navbar = () => {
 
   const navLinks = [
     { to: "/coming-soon", label: "Earn", isExternal: false },
-    { to: "/coming-soon", label: "Mint Domain", isExternal: false },
+    {
+      href: "https://dns.level3labs.fun/",
+      label: "Mint Domain",
+      isExternal: true,
+    },
   ];
 
   const activeLinkClasses = "text-yellow-400 font-semibold";
@@ -41,8 +46,8 @@ const Navbar = () => {
                     isScrolled || mobileMenuOpen
                       ? "bg-[#141b33] py-2 shadow-xl"
                       : "bg-[#141b33] py-1 shadow-lg"
-                  }
-                  rounded-full
+                  }  ${mobileMenuOpen ? "rounded-sm" : "rounded-full"}
+        
                  `}
     >
       <div className="flex justify-between items-center h-13">
@@ -67,31 +72,46 @@ const Navbar = () => {
         </div>
 
         {}
-        <div className="hidden md:flex items-center space-x-7">
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.label}
-              to={link.to as string}
-              className={({ isActive }) =>
-                `text-gray-200 hover:text-yellow-400 transition-colors duration-200 font-medium ${
-                  isActive ? activeLinkClasses : ""
-                }`
-              }
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {link.label}
-            </NavLink>
-          ))}
+        <div className="hidden md:flex items-center gap-7">
+          {navLinks.map((link) =>
+            link.isExternal || link.href ? (
+              <a
+                key={link.label}
+                href={link.href || link.to}
+                className="text-gray-200 hover:text-yellow-400 transition-colors duration-200 font-semibold"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.label}
+              </a>
+            ) : (
+              <NavLink
+                key={link.label}
+                to={link.to as string}
+                className={({ isActive }) =>
+                  `text-gray-200 hover:text-yellow-400 transition-colors duration-200 font-semibold ${
+                    isActive ? activeLinkClasses : ""
+                  }`
+                }
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.label}
+              </NavLink>
+            )
+          )}
           {}
-          <Link to="/courses/all">
+          <NavLink
+            to="/courses/all"
+            className={({ isActive }) =>
+              `text-gray-200 hover:text-yellow-400 transition-colors duration-200 flex items-center font-semibold ${
+                isActive ? activeLinkClasses : ""
+              }`
+            }
+          >
             {" "}
-            {}
-            <Button className="bg-yellow-500 hover:bg-yellow-600 text-zinc-900 font-semibold px-6 py-2.5 rounded-lg shadow-md transition-all duration-300">
-              <BookOpen className="w-4 h-4 mr-2" />
-              View Courses
-            </Button>
-          </Link>
-          <div className="hidden md:flex ">
+            <BookOpen className="w-4 h-4 mr-2" />
+            View Courses
+          </NavLink>
+          <div className="hidden md:flex -ml-4">
             {" "}
             {isConnected ? (
               <CustomConnect />
@@ -131,29 +151,49 @@ const Navbar = () => {
           className="md:hidden bg-[#141b33] py-3 shadow-lg rounded-lg"
         >
           <div className="flex flex-col items-center space-y-4">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.label}
-                to={link.to as string}
-                className={({ isActive }) =>
-                  `text-gray-200 hover:text-yellow-400 transition-colors duration-200 font-medium text-lg ${
-                    isActive ? activeLinkClasses : ""
-                  }`
-                }
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.label}
-              </NavLink>
-            ))}
+            {navLinks.map((link) =>
+              link.isExternal || link.href ? (
+                <a
+                  key={link.label}
+                  href={link.href || link.to}
+                  className="text-gray-200 hover:text-yellow-400 transition-colors duration-200 font-semibold"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <NavLink
+                  key={link.label}
+                  to={link.to as string}
+                  className={({ isActive }) =>
+                    `text-gray-200 hover:text-yellow-400 transition-colors duration-200 font-semibold ${
+                      isActive ? activeLinkClasses : ""
+                    }`
+                  }
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </NavLink>
+              )
+            )}
             {}
-            <Link to="/coming-soon" className="w-3/4">
+            <NavLink
+              to="/courses/all"
+              className={({ isActive }) =>
+                `text-gray-200 hover:text-yellow-400 transition-colors duration-200 flex items-center font-semibold ${
+                  isActive ? activeLinkClasses : ""
+                }`
+              }
+            >
               {" "}
-              {}
-              <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-zinc-900 font-semibold px-6 py-3 rounded-lg shadow-md transition-all duration-300">
-                <BookOpen className="w-4 h-4 mr-2" />
-                View Courses
-              </Button>
-            </Link>
+              <BookOpen className="w-4 h-4 mr-2" />
+              View Courses
+            </NavLink>
+            {isConnected ? (
+              <CustomConnect />
+            ) : (
+              <LogInButton setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
+            )}
           </div>
         </motion.div>
       )}
@@ -161,11 +201,6 @@ const Navbar = () => {
         <div>
           <SignIn loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
         </div>
-      ) : (
-        ""
-      )}
-      {!loggedIn ? (
-        <MobileNav setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
       ) : (
         ""
       )}

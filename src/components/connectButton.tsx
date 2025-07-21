@@ -1,8 +1,8 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
-import { useENSName } from "@/hooks/getPrimaryName";
-import { Avatar } from "@/components/useAvatar";
-import { WalletModal } from "@/components/walletModal";
+import { useENSName } from "../hooks/getPrimaryName";
+import { Avatar } from "./useAvatar";
+import { WalletModal } from "./walletModal";
 import { useState } from "react";
 export const CustomConnect = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -60,11 +60,11 @@ export const CustomConnect = () => {
               }
               return (
                 <div
-                  className=" font-bold cursor-pointer hover:scale-105 duration-200"
+                  className="w-full font-bold cursor-pointer hover:scale-105 duration-200"
                   style={{ display: "flex", gap: 12 }}
                 >
                   <button
-                    className="md:bg-neutral-800 md:p-3 md:py-[8px] rounded-full cursor-pointer flex gap-2 items-center hover:scale-105 duration-200"
+                    className="bg-slate-800 font-bold p-3 py-[8px] rounded-full cursor-pointer flex gap-2 items-center hover:scale-105 duration-200"
                     onClick={() => {
                       setIsOpen(true);
                     }}
@@ -78,6 +78,11 @@ export const CustomConnect = () => {
                       }
                       className="w-8 h-8"
                     />
+                    {name ? (
+                      <div className=" md:flex">{name as string}</div>
+                    ) : (
+                      <div className=" md:flex">{account.displayName}</div>
+                    )}
                   </button>
 
                   <WalletModal

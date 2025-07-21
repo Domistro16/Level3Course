@@ -1,4 +1,3 @@
-import React from 'react';
 import { Github, Twitter, Linkedin, Send } from 'lucide-react';
 
 const Footer = () => {
@@ -34,10 +33,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
           <div className="lg:col-span-2">
             <a href="#" className="flex items-center space-x-2.5 mb-5">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-orange-400 rounded-xl flex items-center justify-center shadow-md">
-                <span className="text-background font-bold text-2xl">L3</span>
-              </div>
-              <span className="text-3xl font-bold primary-gradient-text">Level3</span>
+              <img className='h-10' src='/Level3.png'/>
             </a>
             <p className="text-md text-gray-400 mb-6 max-w-md">
               Empowering the next generation of Web3 content creators with AI-driven learning and decentralized earning opportunities.
@@ -69,7 +65,7 @@ const Footer = () => {
 
         <div className="border-t border-border/30 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-500 mb-4 md:mb-0">
-            © {new Date().getFullYear()} Level3 Protocol. All rights reserved.
+            © {new Date().getFullYear()} Level3 Labs. All rights reserved.
           </p>
           <p className="text-sm text-gray-500">
             Built with <span className="text-primary">&hearts;</span> for the Decentralized Future.
