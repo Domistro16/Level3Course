@@ -1,4 +1,8 @@
 import ReactDOM from "react-dom/client";
+import { Buffer } from "buffer";
+import process from "process";
+window.Buffer = Buffer;
+window.process = process;
 import App from "@/App";
 import "@/index.css";
 import { BrowserRouter } from "react-router-dom";
@@ -48,15 +52,19 @@ function BootStrap() {
 
   useEffect(() => {
     if (synced) {
-      import("@web3auth/modal/react").then((mod) => {
-        console.log("b");
-        import("@web3auth/modal/react/wagmi").then((wagmiMod) => {
-          setWeb3AuthComponents({
-            Web3AuthProvider: mod.Web3AuthProvider,
-            WagmiProvider: wagmiMod.WagmiProvider,
+      console.log("Starting dynamic import...");
+      import("@web3auth/modal/react")
+        .then((mod) => {
+          import("@web3auth/modal/react/wagmi").then((wagmiMod) => {
+            setWeb3AuthComponents({
+              Web3AuthProvider: mod.Web3AuthProvider,
+              WagmiProvider: wagmiMod.WagmiProvider,
+            });
           });
+        })
+        .catch((err) => {
+          console.error("Dynamic import failed:", err);
         });
-      });
     }
   }, [synced]);
 

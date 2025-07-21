@@ -20,6 +20,8 @@ export default defineConfig({
     extensions: [".jsx", ".js", ".tsx", ".ts", ".json"],
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      buffer: "buffer",
+      process: "process",
     },
   },
   build: {
