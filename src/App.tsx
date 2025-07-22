@@ -6,7 +6,6 @@ import CoursesLandingPage from "@/pages/CoursesLandingPage";
 import CourseListPage from "@/pages/CourseListPage";
 import CourseDetailPage from "@/pages/CourseDetailPage";
 import ScrollToTop from "@/components/ScrollToTop";
-import CreatorDomainSection from "@/components/CreatorDomainSection";
 import { useEffect, useRef } from "react";
 import LessonPlayer from "@/pages/LessonPage";
 import { useWeb3Auth } from "@web3auth/modal/react";
@@ -51,10 +50,6 @@ function App() {
               <Route path="/" element={<CoursesLandingPage />} />
               <Route path="/courses/all" element={<CourseListPage />} />
               <Route path="/courses/:courseId" element={<CourseDetailPage />} />
-              <Route
-                path="/mint-creator-domain"
-                element={<CreatorDomainSection isPage={true} />}
-              />
               <Route
                 path="/courses/lesson/:courseId/:id"
                 element={<LessonPlayer />}
