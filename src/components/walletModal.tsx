@@ -4,8 +4,8 @@ import { Avatar } from "./useAvatar";
 import { useAccount } from "wagmi";
 import { useDisconnect } from "wagmi";
 import { useRef } from "react";
-import { web3auth } from "@/web3authHooks";
 import { FaArrowUpRightFromSquare } from "react-icons/fa6";
+import { useWeb3AuthDisconnect } from "@web3auth/modal/react";
 
 ReactModal.setAppElement("#root"); // accessibility
 
@@ -28,7 +28,7 @@ export function WalletModal({
   const { disconnect } = useDisconnect();
   const authFrameRef = useRef<HTMLIFrameElement>(null);
   const iframe = authFrameRef.current;
-  const { disconnect: disconnectWeb3 } = web3auth.useWeb3AuthDisconnect();
+  const { disconnect: disconnectWeb3 } = useWeb3AuthDisconnect();
   const disconnectWithSession = () => {
     if (iframe) {
       console.log(iframe);

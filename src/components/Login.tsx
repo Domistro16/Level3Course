@@ -1,6 +1,6 @@
 import { FaDiscord, FaFacebookF, FaGoogle, FaXTwitter } from "react-icons/fa6";
-import { web3auth } from "@/web3authHooks";
 import React, { useEffect, useRef, useState } from "react";
+import { useWeb3AuthConnect } from "@web3auth/modal/react";
 
 export default function SignIn({
   loggedIn,
@@ -13,8 +13,7 @@ export default function SignIn({
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [available, setAvailable] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const { connectTo, error, connect, isConnected } =
-    web3auth.useWeb3AuthConnect();
+  const { connectTo, error, connect, isConnected } = useWeb3AuthConnect();
   const handleClickOutside = (event: MouseEvent) => {
     console.log("b");
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {

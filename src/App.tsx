@@ -9,11 +9,10 @@ import ScrollToTop from "@/components/ScrollToTop";
 import CreatorDomainSection from "@/components/CreatorDomainSection";
 import { useEffect, useRef } from "react";
 import LessonPlayer from "@/pages/LessonPage";
-import { web3auth} from "@/web3authHooks";
-
+import { useWeb3Auth } from "@web3auth/modal/react";
 function App() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const {status, isConnected} = web3auth.useWeb3Auth()
+  const {status, isConnected} = useWeb3Auth()
   useEffect(() => {
     // Check if the user is already connected
     if (isConnected) {
