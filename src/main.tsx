@@ -1,8 +1,4 @@
 import ReactDOM from "react-dom/client";
-import { Buffer } from "buffer";
-import process from "process";
-window.Buffer = Buffer;
-window.process = process;
 import App from "@/App";
 import "@/index.css";
 import { BrowserRouter } from "react-router-dom";
@@ -10,9 +6,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
 import "@rainbow-me/rainbowkit/styles.css";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { web3AuthOptions } from "@/web3auth";
-import { Web3AuthProvider } from "node_modules/@web3auth/modal/dist/lib.cjs/types/react/Web3AuthProvider";
-import { WagmiProvider } from "node_modules/@web3auth/modal/dist/lib.cjs/types/react/wagmi/provider";
+import {
+  Web3AuthProvider,
+  type Web3AuthContextConfig,
+} from "@web3auth/modal/react";
+import { WagmiProvider } from "@web3auth/modal/react/wagmi";
 
 function BootStrap() {
   const queryClient = new QueryClient();
@@ -48,7 +46,6 @@ function BootStrap() {
     return () => window.removeEventListener("message", onMessage);
   }, []);
 
-
   if (!synced) {
     return (
       <iframe
@@ -60,8 +57,19 @@ function BootStrap() {
     );
   }
 
-  const web3authContextConfig: any = {
-    web3AuthOptions: web3AuthOptions,
+  const web3authContextConfig: Web3AuthContextConfig = {
+    web3AuthOptions: {
+      clientId: import.meta.env.CLIENT_ID || import.meta.env.VITE_CLIENT_ID,
+      web3AuthNetwork: "sapphire_devnet",
+      defaultChainId: "0x61",
+      uiConfig: {
+        mode: "dark",
+        defaultLanguage: "en",
+        theme: {
+          primary: "#768729",
+        },
+      },
+    },
   };
   return (
     <Web3AuthProvider config={web3authContextConfig}>
