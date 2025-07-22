@@ -48,12 +48,15 @@ function BootStrap() {
 
   if (!synced) {
     return (
-      <iframe
-        ref={iframeRef}
-        src="https://auth.level3labs.fun/"
-        style={{ display: "none" }}
-        title="session-sync"
-      />
+      <div className="flex items-center justify-center min-h-screen">
+        <iframe
+          ref={iframeRef}
+          src="https://auth.level3labs.fun/"
+          style={{ display: "none" }}
+          title="session-sync"
+        />
+        <div className="w-16 h-16 border-2 border-yellow-300 border-t-yellow-500 rounded-full animate-spin" />
+      </div>
     );
   }
 
