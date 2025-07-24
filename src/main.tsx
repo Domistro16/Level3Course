@@ -3,7 +3,7 @@ import App from "@/App";
 import "@/index.css";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import "@rainbow-me/rainbowkit/styles.css";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { type Web3AuthContextConfig } from "@web3auth/modal/react";
@@ -22,8 +22,6 @@ const WagmiProvider = React.lazy(() =>
 
 function BootStrap() {
   const queryClient = new QueryClient();
-
-  const [synced, setSynced] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
@@ -35,7 +33,6 @@ function BootStrap() {
         Object.entries(msg.payload).forEach(([k, v]) => {
           if (typeof v === "string") localStorage.setItem(k, v);
         });
-        setSynced(true); // <— now we know storage is ready
       }
     }
     window.addEventListener("message", onMessage);
