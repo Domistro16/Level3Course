@@ -48,6 +48,7 @@
     "@babel/parser": "^7.27.0",
     "@babel/traverse": "^7.27.0",
     "@babel/types": "^7.27.0",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@heroicons/react": "^1.0.6",
     "@types/node": "^20.8.3",
     "@types/react": "^18.2.15",
