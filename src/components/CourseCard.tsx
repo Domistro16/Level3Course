@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,11 +9,10 @@ import {
   Brain,
   ArrowRight,
   Users,
-  Star,
   Lock,
   LucideIcon,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getParticipants } from "@/lib/utils";
 import { abi, Course, Deploy } from "@/constants";
 import { useAccount, useReadContract } from "wagmi";
@@ -51,7 +50,7 @@ const CourseCard = ({
   // Mock enrollment for card display: For demo, let's assume no course is pre-enrolled on general cards
   // Actual enrollment state would come from user context or props
   const {address} = useAccount()
-  const { data: userCourse, isPending: userLoading } = useReadContract({
+  const { data: userCourse } = useReadContract({
     abi: abi,
     functionName: "getCourse",
     address: Deploy,
@@ -60,6 +59,7 @@ const CourseCard = ({
     data: UserType;
     isPending: boolean;
   };
+  const navigate = useNavigate();
 
   const [isEnrolled, setIsEnrolled] = useState(false); // Mock state
   const participants = getParticipants(Number(course.id));
@@ -76,7 +76,8 @@ const CourseCard = ({
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.6, delay: animationDelay, ease: "easeOut" }}
       viewport={{ once: true, amount: 0.3 }}
-      className="glass-effect rounded-xl overflow-hidden group card-hover-effect flex flex-col h-full"
+      className="glass-effect rounded-xl overflow-hidden group card-hover-effect flex flex-col h-full cursor-pointer"
+      onClick={() => navigate(`/courses/${course.id}`)}
     >
       <div className="h-52 bg-gradient-to-br from-primary/10 to-orange-400/10 relative overflow-hidden">
         <img

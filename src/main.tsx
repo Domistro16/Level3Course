@@ -6,11 +6,19 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
 import "@rainbow-me/rainbowkit/styles.css";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import {
-  Web3AuthProvider,
-  type Web3AuthContextConfig,
-} from "@web3auth/modal/react";
-import { WagmiProvider } from "@web3auth/modal/react/wagmi";
+import { type Web3AuthContextConfig } from "@web3auth/modal/react";
+import Fallback from "./FallBack";
+
+const Web3AuthProvider = React.lazy(() =>
+  import("@web3auth/modal/react").then((mod) => ({
+    default: mod.Web3AuthProvider,
+  }))
+);
+const WagmiProvider = React.lazy(() =>
+  import("@web3auth/modal/react/wagmi").then((mod) => ({
+    default: mod.WagmiProvider,
+  }))
+);
 
 function BootStrap() {
   const queryClient = new QueryClient();
@@ -46,20 +54,6 @@ function BootStrap() {
     return () => window.removeEventListener("message", onMessage);
   }, []);
 
-  if (!synced) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <iframe
-          ref={iframeRef}
-          src="https://auth.level3labs.fun/"
-          style={{ display: "none" }}
-          title="session-sync"
-        />
-        <div className="w-16 h-16 border-2 border-yellow-300 border-t-yellow-500 rounded-full animate-spin" />
-      </div>
-    );
-  }
-
   const web3authContextConfig: Web3AuthContextConfig = {
     web3AuthOptions: {
       clientId: import.meta.env.CLIENT_ID || import.meta.env.VITE_CLIENT_ID,
@@ -75,17 +69,27 @@ function BootStrap() {
     },
   };
   return (
-    <Web3AuthProvider config={web3authContextConfig}>
-      <QueryClientProvider client={queryClient}>
-        <WagmiProvider>
-          <RainbowKitProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </RainbowKitProvider>
-        </WagmiProvider>
-      </QueryClientProvider>
-    </Web3AuthProvider>
+    <>
+      <iframe
+        ref={iframeRef}
+        src="https://auth.level3labs.fun/"
+        style={{ display: "none" }}
+        title="session-sync"
+      />
+      <React.Suspense fallback={<Fallback />}>
+        <Web3AuthProvider config={web3authContextConfig}>
+          <QueryClientProvider client={queryClient}>
+            <WagmiProvider>
+              <RainbowKitProvider>
+                <BrowserRouter>
+                  <App />
+                </BrowserRouter>
+              </RainbowKitProvider>
+            </WagmiProvider>
+          </QueryClientProvider>
+        </Web3AuthProvider>
+      </React.Suspense>
+    </>
   );
 }
 

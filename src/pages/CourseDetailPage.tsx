@@ -28,7 +28,7 @@ import { getParticipants } from "@/lib/utils";
 import { useGaslessContractWrite } from "@/lib/useWriteContractMeta";
 import { Progress } from "@/components/ui/progress";
 import { getProgress } from "@/hooks/progress";
-import SignIn from "@/components/Login";
+import { useENSName } from "@/hooks/getPrimaryName";
 
 const iconMap = {
   Target,
@@ -73,14 +73,13 @@ const CourseDetailPage = () => {
     data: UserType;
     isPending: boolean;
   };
-  const [id, setId] = useState<number>();
-  const { data, writeContract, error } = useGaslessContractWrite();
+  const [id] = useState<number>();
+  const { data: hash, writeContract, error } = useGaslessContractWrite();
   const navigate = useNavigate();
   const coursePartcipants = getParticipants(Number(courseId));
   const [isEnrolled, setIsEnrolled] = useState(false); // Mock state
   const [lessonIds, setLessonIds] = useState<number[]>([]);
-  const { isDisconnected } = useAccount();
-  const [loggedIn, setLoggedIn] = useState(isDisconnected);
+  const { name } = useENSName({ owner: address as `0x${string}` });
   useEffect(() => {
     if (userCourse && Symbol.iterator in Object(userCourse)) {
       const [, isActive] = userCourse;
@@ -107,6 +106,7 @@ const CourseDetailPage = () => {
       functionArgs: [Number(courseId), address],
     });
     console.log(error);
+    console.log(hash);
   };
 
   const progress = useMemo(() => {
@@ -163,13 +163,18 @@ const CourseDetailPage = () => {
   const handleEnrollOrMint = () => {
     // In a real app, this would check actual .creator domain status via API
     // For this demo, we assume they need to mint first if not "enrolled"
-    if (!isEnrolled) {
-      // Here you could have a modal pop up, or redirect to a minting page/service
-      // For now, we'll simulate with an alert and then a redirect for demo purposes
+    if (!name) {
       alert(
         "To enroll, you first need to mint your .creator domain. Let's go mint one!"
       );
-      navigate("/mint-creator-domain"); // Redirect to the minting page/section
+      window.location.href = "https://dns.level3labs.fun";
+    }
+    if (!isEnrolled && name) {
+      // Here you could have a modal pop up, or redirect to a minting page/service
+      // For now, we'll simulate with an alert and then a redirect for demo purposes
+      enroll().then(() => {
+        window.location.reload();
+      }); // Refresh the page after enroll is done // Redirect to the minting page/section
       // A more robust solution would be a modal with a "Mint Now" button that leads to the minting flow.
     } else {
       // This part is if they were already "enrolled" or had a domain.
@@ -431,19 +436,9 @@ const CourseDetailPage = () => {
                     className="w-full bg-gradient-to-r from-primary to-orange-400 hover:from-orange-500 hover:to-primary text-background font-semibold text-md py-3.5 rounded-lg shadow-xl hover:shadow-primary/50 transition-all duration-300 transform hover:scale-105 neon-glow"
                   >
                     <LinkIcon className="w-5 h-5 mr-2.5" />
-                    Mint .creator Domain to Enroll
+                    {!name ? "Mint .creator Domain to Enroll" : "Enroll"}
                   </Button>
                   {/* Simulate enrollment after mint button for demo */}
-                  <Button
-                    variant="link"
-                    onClick={enroll}
-                    className="w-full text-xs text-muted-foreground hover:text-primary mt-2"
-                  >
-                    (Dev: Simulate Enrollment)
-                  </Button>
-                  <p className="text-xs text-muted-foreground mt-3 text-center">
-                    Secure your unique Web3 identity.
-                  </p>
                 </>
               )}
 
@@ -490,7 +485,6 @@ const CourseDetailPage = () => {
           </motion.section>
         )}
       </div>
-      {loggedIn ? <SignIn loggedIn={loggedIn} setLoggedIn={setLoggedIn} /> : ""}
     </div>
   );
 };

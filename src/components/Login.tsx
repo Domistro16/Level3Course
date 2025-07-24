@@ -35,6 +35,7 @@ export default function SignIn({
   const loginWithGoogle = () => {
     connectTo("auth", {
       authConnection: "google",
+      authConnectionId: "level3labs",
     });
   };
   const loginWithEmail = async (e: React.FormEvent) => {
@@ -146,7 +147,7 @@ export default function SignIn({
           </div>
 
           {/* Right Column */}
-          <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col items-center justify-center text-center text-white">
+          <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col hidden md:block items-center justify-center text-center text-white mt-20">
             <h1 className="text-2xl md:text-3xl font-bold mb-5">
               Welcome to LEVEL3
             </h1>
@@ -166,6 +167,27 @@ export default function SignIn({
             >
               Connect Wallet
             </button>
+          </div>
+          <div className="w-full md:w-1/2 p-6 md:p-10 flex md:hidden flex-col items-center justify-center text-center text-white">
+            <button
+              className="bg-blue-800 px-6 py-2 font-bold rounded-full hover:scale-105 duration-200 cursor-pointer"
+              onClick={connect}
+              type="button"
+            >
+              Connect Wallet
+            </button>
+            <span className="inline-block bg-white/10 rounded-full px-4 py-1 text-sm mb-4">
+              Suggested
+            </span>
+            <h2 className="text-lg md:text-xl font-semibold mb-2">
+              Connect your wallet
+            </h2>
+            <p className="text-light mb-6 text-sm md:text-base">
+              If you already have your own wallet, you can connect it to log in.
+            </p>
+            <h1 className="text-2xl md:text-3xl font-bold mb-5">
+              Welcome to LEVEL3
+            </h1>
           </div>
         </div>
       </div>

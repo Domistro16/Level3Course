@@ -1,16 +1,24 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import  videojs from "video.js"
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { VideoJsPlayerOptions, VideoJsPlayer } from "video.js";
 import { PinataSDK } from "pinata";
 import { abi, Course, Deploy } from "@/constants";
+import videojs from "video.js";
 // This imports the functional component from the previous sample.
-import VideoPlayer from "@/components/VideoPlayer";
 import { getProgress, updateProgress } from "@/hooks/progress";
 import { useAccount, useReadContract } from "wagmi";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, ChevronLeft } from "lucide-react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import SignIn from "@/components/Login";
+import { useGaslessContractWrite } from "@/lib/useWriteContractMeta";
+
+const VideoPlayer = React.lazy(() => import("@/components/VideoPlayer"));
 
 const LessonPlayer = () => {
   const playerRef = useRef<VideoJsPlayer | null>(null);
@@ -18,7 +26,9 @@ const LessonPlayer = () => {
   const { courseId, id } = useParams<string>();
   const [bool, setContinue] = useState(false);
   const [lessonIds, setLessonIds] = useState<number[]>([]);
+  const [retrieved, setRetrieved] = useState(false);
   const { address } = useAccount();
+  const { data: hash, writeContract, error } = useGaslessContractWrite();
   const pinata = useMemo(
     () =>
       new PinataSDK({
@@ -40,19 +50,20 @@ const LessonPlayer = () => {
   const navigate = useNavigate();
   const { isDisconnected } = useAccount();
   const [loggedIn, setLoggedIn] = useState(isDisconnected);
-
   useEffect(() => {
     const callUser = async () => {
       const progress = await getProgress(address as string, Number(courseId));
       console.log(progress);
       if (progress && Object.keys(progress).length > 0) {
         setLessonIds(progress.completedLessons);
+        setRetrieved(true);
       }
     };
     callUser();
   }, [courseId, address]);
 
   useEffect(() => {
+    if (!retrieved) return;
     if (lessonIds.length < Number(id)) {
       navigate(`/courses/${courseId}`);
     }
@@ -102,20 +113,42 @@ const LessonPlayer = () => {
     }),
     [link]
   ); // ✅ Only updates when link changes
+  const complete = async () => {
+    await writeContract({
+      targetABI: abi as any,
+      targetAddress: Deploy,
+      functionName: "updateProgress",
+      functionArgs: [Number(courseId), Number(id), 100],
+    });
+    console.log(error);
+    console.log(hash);
+  };
 
   const next = (): void => {
-    console.log("b");
-    if (bool) {
-      navigate(`/courses/lesson/${courseId}/${Number(id) + 1}`);
+    if (!course) return;
+
+    const currentId = Number(id);
+    const isNextAfterLast = currentId === course.lessons.length + 1;
+
+    // If user just completed the last lesson and tries to go to the next one
+    if (isNextAfterLast) {
       setContinue(false);
-    } else if (lessonIds.includes(Number(id))) {
-      navigate(`/courses/lesson/${courseId}/${Number(id) + 1}`);
+      complete().then(() => navigate(`/courses/${courseId}`));
+      return;
+    }
+
+    const canAccessNext =
+      (bool || lessonIds.includes(currentId)) &&
+      currentId < course.lessons.length;
+
+    if (canAccessNext) {
+      navigate(`/courses/lesson/${courseId}/${currentId + 1}`);
       setContinue(false);
     } else {
-      console.log("b");
       window.alert("C'mon, Don't skip a lesson");
     }
   };
+
   const prev = (): void => {
     navigate(`/courses/lesson/${courseId}/${Number(id) - 1}`);
     setContinue(false);
@@ -249,7 +282,7 @@ const LessonPlayer = () => {
             className="px-3 py-1 border-2 border-neutral-500 primary-gradient-text rounded-xl font-bold transition-all duration-300 delay-100 hover:border-[#FFB000]"
             onClick={() => next()}
           >
-            Next
+            {Number(id) === course.lessons.length + 1 ? "Finish" : "Next"}
           </button>
         </div>
       </div>

@@ -19,39 +19,6 @@ type ForwardRequest = {
 };
 
 // Hook arguments
-interface UseGaslessContractWriteArgs {
-  /** Deployed MinimalForwarder address */
-  forwarderAddress: `0x${string}`;
-  /** ABI of MinimalForwarder (must include getNonce) */
-  forwarderABI: Abi;
-  /** ABI of target contract (e.g. ["function setValue(uint256)"]) */
-  targetABI: Abi;
-  /** Address of target contract (inherits ERC2771Context) */
-  targetAddress: `0x${string}`;
-  /** The name of the function you want to call on target (e.g. "setValue") */
-  functionName: string;
-  /** Arguments for that function (e.g. [42]) */
-  functionArgs: readonly unknown[];
-  /** (Optional) Gas limit to send in the ForwardRequest. Defaults to 100k */
-  gasLimit?: bigint;
-  /** Your backend/Defender relay endpoint. It should accept { request, signature } */
-  relayerUrl: string;
-  /** EIP-712 Domain params for MinimalForwarder */
-  domain: {
-    name: string;
-    version: string;
-    chainId: number;
-    verifyingContract: `0x${string}`;
-  };
-  /** EIP-712 types for ForwardRequest (must match MinimalForwarder) */
-  types: {
-    ForwardRequest: {
-      name: "from" | "to" | "value" | "gas" | "nonce" | "data";
-      type: "address" | "uint256" | "bytes";
-    }[];
-  };
-}
-
 interface writeContractArgs {
   targetABI: Abi;
   /** Address of target contract (inherits ERC2771Context) */
@@ -437,8 +404,8 @@ export function useGaslessContractWrite() {
             `Relayer error: ${response.status} ${response.statusText} – ${text}`
           );
         }
-        const { transactionHash } = await response.json();
-        setTxHash(transactionHash);
+        const { txHash } = await response.json();
+        setTxHash(txHash);
       } catch (err: any) {
         console.error(err);
         setIsSending(false);

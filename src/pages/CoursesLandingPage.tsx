@@ -19,7 +19,7 @@ const CoursesLandingPage = () => {
   console.log(isPending);
   const account = useAccount();
   console.log(account.address);
-
+  console.log(courses);
   if (isPending || !courses) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -28,7 +28,7 @@ const CoursesLandingPage = () => {
     );
   }
 
-  const featuredCourses = courses.slice(0, 3);
+  const featuredCourses = courses.filter((course) => course.id == 4n).concat(courses.slice(1, 3));
 
   return (
     <div className="min-h-screen crypto-pattern">
@@ -44,20 +44,20 @@ const CoursesLandingPage = () => {
           <div className="inline-flex items-center px-5 py-2.5 rounded-full glass-effect mb-6 border border-primary/30 shadow-lg">
             <Sparkles className="w-5 h-5 text-primary mr-2.5" />
             <span className="text-sm font-medium text-gray-200">
-              Level Up Your Creator Skills
+              Level Up Your Skills
             </span>
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
             Explore Our AI-Powered{" "}
-            <span className="primary-gradient-text">Course Catalog</span>
+            <span className="primary-gradient-text">Courses</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Dive into a world of knowledge curated by AI, designed for Web3
-            creators. Mint your{" "}
+            Human curated, AI presented courses available in 32 languages.
+            Unlocked with your
             <code className="text-primary font-bold p-1.5 rounded-md bg-primary/10 shadow-sm">
               .creator
-            </code>{" "}
-            domain to unlock exclusive content and start learning today.
+            </code>
+            digital identity
           </p>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center items-center">
             <Link to="/courses/all">

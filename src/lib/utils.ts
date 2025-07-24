@@ -1,9 +1,9 @@
-import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { useReadContract } from "wagmi";
 import { abi, Deploy } from "@/constants";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
-export function cn(...inputs) {
+export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 

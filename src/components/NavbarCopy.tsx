@@ -2,18 +2,12 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { X, BookOpen } from "lucide-react";
-import { Link, NavLink, useLocation } from "react-router-dom";
-import { CustomConnect } from "./connectButton";
-import LogInButton from "./LoginButton";
-import { useAccount } from "wagmi";
-import SignIn from "./Login";
+import { Link, NavLink } from "react-router-dom";
 
-const Navbar = () => {
+
+const FallBackNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isConnected, isDisconnected } = useAccount();
-  const [loggedIn, setLoggedIn] = useState(isDisconnected);
-  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -110,14 +104,6 @@ const Navbar = () => {
             <BookOpen className="w-4 h-4 mr-2" />
             View Courses
           </NavLink>
-          <div className="hidden md:flex -ml-4">
-            {" "}
-            {isConnected ? (
-              <CustomConnect />
-            ) : (
-              <LogInButton setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
-            )}
-          </div>
         </div>
 
         <div className="md:hidden">
@@ -188,17 +174,11 @@ const Navbar = () => {
               <BookOpen className="w-4 h-4 mr-2" />
               View Courses
             </NavLink>
-            {isConnected ? (
-              <CustomConnect />
-            ) : (
-              <LogInButton setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
-            )}
           </div>
         </motion.div>
       )}
-      {loggedIn && location.pathname != '/' ? <SignIn loggedIn={loggedIn} setLoggedIn={setLoggedIn} /> : ""}
     </motion.nav>
   );
 };
 
-export default Navbar;
+export default FallBackNavbar;

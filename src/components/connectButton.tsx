@@ -60,11 +60,11 @@ export const CustomConnect = () => {
               }
               return (
                 <div
-                  className="w-full font-bold cursor-pointer hover:scale-105 duration-200"
+                  className="w-full font-semibold cursor-pointer hover:scale-105 duration-200"
                   style={{ display: "flex", gap: 12 }}
                 >
                   <button
-                    className="bg-slate-800 font-bold p-3 py-[8px] rounded-full cursor-pointer flex gap-2 items-center hover:scale-105 duration-200"
+                    className="bg-slate-800 font-semibold p-3 py-[8px] rounded-full cursor-pointer flex gap-2 items-center hover:scale-105 duration-200"
                     onClick={() => {
                       setIsOpen(true);
                     }}
@@ -79,9 +79,11 @@ export const CustomConnect = () => {
                       className="w-8 h-8"
                     />
                     {name ? (
-                      <div className=" md:flex">{name as string}</div>
+                      <div className="font-bold md:flex">{name as string}</div>
                     ) : (
-                      <div className=" md:flex">{account.displayName}</div>
+                      <div className="font-extrabold md:flex">
+                        {account.displayName}
+                      </div>
                     )}
                   </button>
 
