@@ -8,11 +8,6 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { type Web3AuthContextConfig } from "@web3auth/modal/react";
 import Fallback from "./FallBack";
-import { Buffer } from "buffer";
-import process from "process";
-
-window.Buffer = Buffer;
-window.process = process;
 
 const Web3AuthProvider = React.lazy(() =>
   import("@web3auth/modal/react").then((mod) => ({

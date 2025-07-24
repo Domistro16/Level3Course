@@ -49,9 +49,6 @@ export default defineConfig({
       ],
       output: {
         manualChunks: {
-          web3auth: ["@web3auth/modal"],
-          web3authModal: ["@web3auth/modal/react"],
-          web3authModalReact: ["@web3auth/modal/react/wagmi"],
           videojs: [
             "video.js",
             "videojs-contrib-quality-levels",

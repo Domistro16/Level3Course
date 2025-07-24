@@ -1,6 +1,7 @@
 import path from "node:path";
 import react from "@vitejs/plugin-react";
 import { createLogger, defineConfig } from "vite";
+import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 var logger = createLogger();
 var loggerError = logger.error;
 logger.error = function (msg, options) {
@@ -21,6 +22,19 @@ export default defineConfig({
             process: "process",
         },
     },
+    optimizeDeps: {
+        esbuildOptions: {
+            define: {
+                global: "globalThis",
+            },
+            plugins: [
+                NodeGlobalsPolyfillPlugin({
+                    buffer: true,
+                    process: true,
+                }),
+            ],
+        },
+    },
     build: {
         target: "esnext",
         rollupOptions: {
@@ -32,9 +46,6 @@ export default defineConfig({
             ],
             output: {
                 manualChunks: {
-                    web3auth: ["@web3auth/modal"],
-                    web3authModal: ["@web3auth/modal/react"],
-                    web3authModalReact: ["@web3auth/modal/react/wagmi"],
                     videojs: [
                         "video.js",
                         "videojs-contrib-quality-levels",
