@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
-import videojs from "video.js";
 import type { VideoJsPlayerOptions, VideoJsPlayer } from "video.js";
+import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "videojs-contrib-quality-levels";
 import "videojs-http-source-selector";
@@ -14,6 +14,8 @@ declare module "video.js" {
     httpSourceSelector?: (options: { default: string }) => void;
   }
 }
+
+
 
 export const VideoPlayer = ({ options, onReady }: VideoPlayerProps) => {
   const videoRef = useRef<HTMLDivElement | null>(null); // changed to match actual usage

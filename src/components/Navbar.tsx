@@ -14,6 +14,7 @@ const Navbar = () => {
   const { isConnected, isDisconnected } = useAccount();
   const [loggedIn, setLoggedIn] = useState(isDisconnected);
   const location = useLocation();
+  const [showOnRoot, setShowOnRoot] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -115,7 +116,11 @@ const Navbar = () => {
             {isConnected ? (
               <CustomConnect />
             ) : (
-              <LogInButton setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
+              <LogInButton
+                setLoggedIn={setLoggedIn}
+                loggedIn={loggedIn}
+                setShowOnRoot={setShowOnRoot}
+              />
             )}
           </div>
         </div>
@@ -191,12 +196,18 @@ const Navbar = () => {
             {isConnected ? (
               <CustomConnect />
             ) : (
-              <LogInButton setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
+              <LogInButton
+                setLoggedIn={setLoggedIn}
+                loggedIn={loggedIn}
+                setShowOnRoot={setShowOnRoot}
+              />
             )}
           </div>
         </motion.div>
       )}
-      {loggedIn && location.pathname != '/' ? <SignIn loggedIn={loggedIn} setLoggedIn={setLoggedIn} /> : ""}
+      {loggedIn && (location.pathname !== "/" || showOnRoot) && (
+        <SignIn loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+      )}
     </motion.nav>
   );
 };

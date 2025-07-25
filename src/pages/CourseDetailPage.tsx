@@ -80,6 +80,7 @@ const CourseDetailPage = () => {
   const [isEnrolled, setIsEnrolled] = useState(false); // Mock state
   const [lessonIds, setLessonIds] = useState<number[]>([]);
   const { name } = useENSName({ owner: address as `0x${string}` });
+  const [lastWatched, setLastWatched] = useState<number | null>(null);
   useEffect(() => {
     if (userCourse && Symbol.iterator in Object(userCourse)) {
       const [, isActive] = userCourse;
@@ -93,6 +94,7 @@ const CourseDetailPage = () => {
       console.log(progress);
       if (progress && Object.keys(progress).length > 0) {
         setLessonIds(progress.completedLessons);
+        setLastWatched(progress.lastWatched);
       }
     };
     callUser();
@@ -184,6 +186,7 @@ const CourseDetailPage = () => {
   };
 
   console.log(id);
+  console.log(progress)
 
   return (
     <div className="min-h-screen crypto-pattern py-12 md:py-16 px-4 sm:px-6 lg:px-8">
@@ -284,9 +287,18 @@ const CourseDetailPage = () => {
                   <h2 className="text-2xl font-semibold mb-4 text-gray-100">
                     Course Overview
                   </h2>
-                  <p className="text-gray-300 leading-relaxed mb-6">
-                    {course.longDescription}
-                  </p>
+
+                  {course.longDescription
+                    .split("\n")
+                    .map((paragraph, index) => (
+                      <p
+                        key={index}
+                        className="text-gray-300 leading-relaxed mb-6"
+                      >
+                        {paragraph}
+                      </p>
+                    ))}
+
                   <h3 className="text-xl font-semibold mb-3 text-gray-200">
                     What You'll Learn
                   </h3>
@@ -408,12 +420,24 @@ const CourseDetailPage = () => {
                     Course Progress
                     <Progress value={progress} className="mt-1" />
                   </div>
-                  <Link to="/courses/all">
+                  <Link
+                    to={`${
+                      progress === 100
+                        ? ""
+                        : `/courses/lesson/${courseId}/${
+                            lastWatched == null ? 0 : lastWatched + 1
+                          }`
+                    }`}
+                  >
                     <Button
                       variant="outline"
                       className="w-full border-primary text-primary hover:bg-primary/10"
                     >
-                      Explore Other Courses
+                      {progress == 100
+                        ? "View Certificate"
+                        : progress == 0
+                        ? "Start Learning"
+                        : "Continue Learning"}
                     </Button>
                   </Link>
                 </div>

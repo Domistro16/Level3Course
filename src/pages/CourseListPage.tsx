@@ -52,12 +52,12 @@ const CourseListPage = () => {
 
   const levels = [
     "all",
-    ...new Set(fallbackCourses.map((course) => course.level)),
+    ...new Set(fallbackCourses?.map((course) => course.level)),
   ];
   const durations = ["all", "1-30 minutes", "30 minutes-1 hour", "1+ hours"];
   const categories = [
     "all",
-    ...new Set(fallbackCourses.map((course) => course.category)),
+    ...new Set(fallbackCourses?.map((course) => course.category)),
   ];
   const getDurationCategory = (duration: string) => {
     const minutes = parseInt(duration);
@@ -68,7 +68,7 @@ const CourseListPage = () => {
 
   const filteredCourses = useMemo(
     () =>
-      fallbackCourses.filter((course) => {
+      fallbackCourses?.filter((course) => {
         const matchesSearchTerm =
           course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           course.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -90,14 +90,14 @@ const CourseListPage = () => {
   );
 
   const starterCourses = useMemo(
-    () => fallbackCourses.filter((c) => c.category === "Starter").slice(0, 3),
+    () => fallbackCourses?.filter((c) => c.category === "Starter").slice(0, 3),
     [fallbackCourses]
   );
   const popularCourses = useMemo(() => {
     if (!participants) return [];
 
     return fallbackCourses
-      .map((course, i) => ({
+      ?.map((course, i) => ({
         ...course,
         participants: participants[i] || 0,
       }))
@@ -107,17 +107,10 @@ const CourseListPage = () => {
   }, [fallbackCourses, participants]);
 
   const premiumCourses = useMemo(
-    () => fallbackCourses.filter((c) => c.category === "Premium").slice(0, 3),
+    () => fallbackCourses?.filter((c) => c.category === "Premium").slice(0, 3),
     [fallbackCourses]
   );
 
-  if (isPending || !courses) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-16 h-16 border-2 border-yellow-300 border-t-yellow-500 rounded-full animate-spin" />
-      </div>
-    );
-  }
   console.log(courses);
 
   const Section = ({
@@ -170,6 +163,10 @@ const CourseListPage = () => {
               animationDelay={index * 0.1}
             />
           ))}
+        </div>
+      ) : isPending ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="w-16 h-16 border-2 border-yellow-300 border-t-yellow-500 rounded-full animate-spin" />
         </div>
       ) : (
         <p className="text-center text-muted-foreground">

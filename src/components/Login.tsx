@@ -95,7 +95,7 @@ export default function SignIn({
         {/* Modal container */}
         <div
           ref={modalRef}
-          className="w-11/12 max-w-6xl h-[74%] md:h-[90%] opacity-85 bg-[url('/bg.png')] rounded-2xl shadow-lg overflow-auto md:overflow-hidden flex flex-col md:flex-row mx-auto pb-20"
+          className="w-11/12 max-w-6xl h-[74%] md:h-[90%] opacity-85 bg-[url('/bg.png')] rounded-2xl shadow-lg overflow-auto md:overflow-hidden flex flex-col md:flex-row mx-auto pb-20 border-[0.5px] border-[#FFB000]"
         >
           {/* Left Column */}
           <div className="w-full md:w-1/2 border-b md:border-b-0 md:border-r border-white/10 p-6 md:p-10 flex flex-col">

@@ -20,15 +20,9 @@ const CoursesLandingPage = () => {
   const account = useAccount();
   console.log(account.address);
   console.log(courses);
-  if (isPending || !courses) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-16 h-16 border-2 border-yellow-300 border-t-yellow-500 rounded-full animate-spin" />
-      </div>
-    );
-  }
 
-  const featuredCourses = courses.filter((course) => course.id == 4n).concat(courses.slice(1, 3));
+  const featuredCourses = courses?.filter((course) => course.id == 4n)
+    .concat(courses.slice(1, 3));
 
   return (
     <div className="min-h-screen crypto-pattern">
@@ -100,23 +94,29 @@ const CoursesLandingPage = () => {
               ambitious creators.
             </p>
           </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            {featuredCourses.map((course, index) => (
-              <motion.div
-                key={course.id}
-                initial={{ opacity: 0, y: 50, scale: 0.95 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{
-                  duration: 0.6,
-                  delay: index * 0.1,
-                  ease: "easeOut",
-                }}
-                viewport={{ once: true, amount: 0.3 }}
-              >
-                <CourseCard course={course} />
-              </motion.div>
-            ))}
-          </div>
+          {isPending ? (
+            <div className="flex items-center justify-center h-64">
+              <div className="w-16 h-16 border-2 border-yellow-300 border-t-yellow-500 rounded-full animate-spin" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+              {featuredCourses.map((course, index) => (
+                <motion.div
+                  key={course.id}
+                  initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{
+                    duration: 0.6,
+                    delay: index * 0.1,
+                    ease: "easeOut",
+                  }}
+                  viewport={{ once: true, amount: 0.3 }}
+                >
+                  <CourseCard course={course} />
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
