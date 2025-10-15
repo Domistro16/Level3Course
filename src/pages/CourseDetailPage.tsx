@@ -22,10 +22,9 @@ import {
 } from "lucide-react";
 import CourseCard from "@/components/CourseCard";
 import { Course } from "@/constants";
-import { useAccount, useReadContract } from "wagmi";
+import { useAccount, useReadContract, useSignMessage } from "wagmi";
 import { abi, Deploy } from "@/constants";
 import { getParticipants } from "@/lib/utils";
-import { useGaslessContractWrite } from "@/lib/useWriteContractMeta";
 import { Progress } from "@/components/ui/progress";
 import { getProgress } from "@/hooks/progress";
 import { useENSName } from "@/hooks/getPrimaryName";
@@ -73,14 +72,16 @@ const CourseDetailPage = () => {
     data: UserType;
     isPending: boolean;
   };
-  const [id] = useState<number>();
-  const { data: hash, writeContract, error } = useGaslessContractWrite();
+  // const { data: hash, writeContract, error } = useGaslessContractWrite();
   const navigate = useNavigate();
   const coursePartcipants = getParticipants(Number(courseId));
   const [isEnrolled, setIsEnrolled] = useState(false); // Mock state
   const [lessonIds, setLessonIds] = useState<number[]>([]);
   const { name } = useENSName({ owner: address as `0x${string}` });
   const [lastWatched, setLastWatched] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
+  const { signMessageAsync } = useSignMessage(); // Use isConnected to check if a wallet is connected
+
   useEffect(() => {
     if (userCourse && Symbol.iterator in Object(userCourse)) {
       const [, isActive] = userCourse;
@@ -91,7 +92,6 @@ const CourseDetailPage = () => {
   useEffect(() => {
     const callUser = async () => {
       const progress = await getProgress(address as string, Number(courseId));
-      console.log(progress);
       if (progress && Object.keys(progress).length > 0) {
         setLessonIds(progress.completedLessons);
         setLastWatched(progress.lastWatched);
@@ -101,14 +101,26 @@ const CourseDetailPage = () => {
   }, [courseId, address]);
 
   const enroll = async () => {
-    await writeContract({
-      targetABI: abi as any,
-      targetAddress: Deploy,
-      functionName: "enroll",
-      functionArgs: [Number(courseId), address],
-    });
-    console.log(error);
-    console.log(hash);
+    const course = courses.find((c) => Number(c.id) === Number(courseId));
+
+    const messageToSign = `Enrolling for: ${course?.title}`;
+
+    const signature = await signMessageAsync({ message: messageToSign });
+    if (!signature) return;
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}enroll/${address}/${courseId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": import.meta.env.VITE_API_KEY,
+        },
+      }
+    );
+
+    if (!response.ok) {
+    }
+    await response.json();
   };
 
   const progress = useMemo(() => {
@@ -163,31 +175,29 @@ const CourseDetailPage = () => {
     .slice(0, 2);
 
   const handleEnrollOrMint = () => {
-    // In a real app, this would check actual .creator domain status via API
+    // In a real app, this would check actual .safu domain status via API
     // For this demo, we assume they need to mint first if not "enrolled"
+    setLoading(true);
     if (!name) {
       alert(
-        "To enroll, you first need to mint your .creator domain. Let's go mint one!"
+        "To enroll, you first need to mint your .safu domain. Let's go mint one!"
       );
-      window.location.href = "https://dns.level3labs.fun";
+      window.location.href = "https://names.safuverse.com";
     }
     if (!isEnrolled && name) {
       // Here you could have a modal pop up, or redirect to a minting page/service
       // For now, we'll simulate with an alert and then a redirect for demo purposes
       enroll().then(() => {
+        setLoading(false);
         window.location.reload();
       }); // Refresh the page after enroll is done // Redirect to the minting page/section
       // A more robust solution would be a modal with a "Mint Now" button that leads to the minting flow.
     } else {
       // This part is if they were already "enrolled" or had a domain.
       // We'll just log for now, as `isEnrolled` is true, the UI shows "You're Enrolled"
-      console.log("User is already enrolled or has a domain.");
+      setLoading(false);
     }
   };
-
-  console.log(id);
-  console.log(progress)
-
   return (
     <div className="min-h-screen crypto-pattern py-12 md:py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -231,16 +241,13 @@ const CourseDetailPage = () => {
                 </div>
               </div>
               <p className="text-lg text-gray-300 leading-relaxed mb-1">
-                {course.description.replace(
-                  " Access with .creator domain.",
-                  ""
-                )}
+                {course.description.replace(" Access with .safu domain.", "")}
               </p>
               {!isEnrolled && (
                 <p className="text-sm text-amber-400 flex items-center">
                   <Info size={16} className="mr-1.5" /> Mint your{" "}
                   <code className="text-primary font-semibold p-0.5 rounded bg-primary/10 mx-1">
-                    .creator
+                    .safu
                   </code>{" "}
                   domain to enroll and access full content.
                 </p>
@@ -343,7 +350,7 @@ const CourseDetailPage = () => {
                         {!isEnrolled && idx >= 1 && (
                           <div className="mt-2 flex items-center text-sm text-amber-400">
                             <Lock size={14} className="mr-1.5" /> This module is
-                            locked. Mint .creator domain & enroll to access.
+                            locked. Mint .safu domain & enroll to access.
                           </div>
                         )}
                       </div>
@@ -450,17 +457,28 @@ const CourseDetailPage = () => {
                     Full access to this course and its materials is unlocked by
                     minting your{" "}
                     <code className="text-primary font-semibold p-1 rounded bg-primary/10">
-                      .creator
+                      .safu
                     </code>{" "}
                     domain.
                   </p>
                   <Button
                     size="lg"
                     onClick={handleEnrollOrMint}
+                    disabled={loading}
                     className="w-full bg-gradient-to-r from-primary to-orange-400 hover:from-orange-500 hover:to-primary text-background font-semibold text-md py-3.5 rounded-lg shadow-xl hover:shadow-primary/50 transition-all duration-300 transform hover:scale-105 neon-glow"
                   >
-                    <LinkIcon className="w-5 h-5 mr-2.5" />
-                    {!name ? "Mint .creator Domain to Enroll" : "Enroll"}
+                    {loading ? (
+                      <span className="flex items-center justify-center space-x-1 text-xl font-bold">
+                        <span>●</span>
+                        <span>●</span>
+                        <span>●</span>
+                      </span>
+                    ) : (
+                      <>
+                        <LinkIcon className="w-5 h-5 mr-2.5" />
+                        {!name ? "Mint .safu Domain to Enroll" : "Enroll"}
+                      </>
+                    )}
                   </Button>
                   {/* Simulate enrollment after mint button for demo */}
                 </>
@@ -477,7 +495,7 @@ const CourseDetailPage = () => {
                     src="https://images.unsplash.com/photo-1578390432942-d323db577792"
                   />
                   <div>
-                    <p className="font-medium text-gray-100">
+                    <p className="font-semibold text-gray-100">
                       {course.instructor}
                     </p>
                     <p className="text-xs text-primary">

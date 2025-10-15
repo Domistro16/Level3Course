@@ -3,19 +3,27 @@ import App from "@/App";
 import "@/index.css";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import "@rainbow-me/rainbowkit/styles.css";
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { type Web3AuthContextConfig } from "@web3auth/modal/react";
-import Fallback from "./FallBack";
+import {
+  connectorsForWallets,
+  darkTheme,
+  RainbowKitProvider,
+} from "@rainbow-me/rainbowkit";
 
-const Web3AuthProvider = React.lazy(() =>
-  import("@web3auth/modal/react").then((mod) => ({
-    default: mod.Web3AuthProvider,
-  }))
-);
+import { bsc } from "viem/chains";
+import {
+  rainbowWallet,
+  walletConnectWallet,
+  metaMaskWallet,
+  coinbaseWallet,
+  binanceWallet,
+} from "@rainbow-me/rainbowkit/wallets";
+import { http } from "viem";
+import { createConfig } from "wagmi";
+
 const WagmiProvider = React.lazy(() =>
-  import("@web3auth/modal/react/wagmi").then((mod) => ({
+  import("wagmi").then((mod) => ({
     default: mod.WagmiProvider,
   }))
 );
@@ -24,47 +32,32 @@ function BootStrap() {
   const queryClient = new QueryClient();
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  useEffect(() => {
-    function onMessage(e: MessageEvent) {
-      console.log(e.data);
-      if (e.origin !== "https://auth.level3labs.fun") return;
-      const msg = JSON.parse(e.data);
-      if (msg.type === "SESSION_DATA") {
-        Object.entries(msg.payload).forEach(([k, v]) => {
-          if (typeof v === "string") localStorage.setItem(k, v);
-        });
-      }
-    }
-    window.addEventListener("message", onMessage);
-
-    const iframe = iframeRef.current;
-    if (iframe) {
-      iframe.onload = () => {
-        console.log(iframe);
-        iframe.contentWindow?.postMessage(
-          JSON.stringify({ type: "GET_SESSION" }),
-          "https://auth.level3labs.fun"
-        );
-      };
-    }
-
-    return () => window.removeEventListener("message", onMessage);
-  }, []);
-
-  const web3authContextConfig: Web3AuthContextConfig = {
-    web3AuthOptions: {
-      clientId: import.meta.env.CLIENT_ID || import.meta.env.VITE_CLIENT_ID,
-      web3AuthNetwork: "sapphire_devnet",
-      defaultChainId: "0x61",
-      uiConfig: {
-        mode: "dark",
-        defaultLanguage: "en",
-        theme: {
-          primary: "#768729",
-        },
+  const connectors = connectorsForWallets(
+    [
+      {
+        groupName: "Recommended",
+        wallets: [
+          rainbowWallet,
+          binanceWallet,
+          metaMaskWallet,
+          coinbaseWallet,
+          walletConnectWallet,
+        ],
       },
+    ],
+    {
+      appName: "SafuDomains",
+      projectId: "YOUR_PROJECT_ID",
+    }
+  );
+
+  const config = createConfig({
+    connectors,
+    transports: {
+      [bsc.id]: http(),
     },
-  };
+    chains: [bsc],
+  });
   return (
     <>
       <iframe
@@ -73,19 +66,23 @@ function BootStrap() {
         style={{ display: "none" }}
         title="session-sync"
       />
-      <React.Suspense fallback={<Fallback />}>
-        <Web3AuthProvider config={web3authContextConfig}>
-          <QueryClientProvider client={queryClient}>
-            <WagmiProvider>
-              <RainbowKitProvider>
-                <BrowserRouter>
-                  <App />
-                </BrowserRouter>
-              </RainbowKitProvider>
-            </WagmiProvider>
-          </QueryClientProvider>
-        </Web3AuthProvider>
-      </React.Suspense>
+      <QueryClientProvider client={queryClient}>
+        <WagmiProvider config={config}>
+          <RainbowKitProvider
+            theme={darkTheme({
+              accentColor: "#FF7000",
+              accentColorForeground: "white",
+              borderRadius: "large",
+              fontStack: "system",
+              overlayBlur: "small",
+            })}
+          >
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </RainbowKitProvider>
+        </WagmiProvider>
+      </QueryClientProvider>
     </>
   );
 }

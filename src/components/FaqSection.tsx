@@ -11,19 +11,19 @@ import { Link } from "react-router-dom";
 
 const faqData = [
   {
-    question: "What is a .creator domain?",
+    question: "What is a .safu domain?",
     answer:
-      "A .creator domain is a new top-level domain (TLD) specifically designed for content creators, artists, and innovators. It helps you establish a unique online identity and provides access to exclusive tools and communities within our ecosystem.",
+      "A .safu domain is a new top-level domain (TLD) specifically designed for content creators, artists, and innovators. It helps you establish a unique online identity and provides access to exclusive tools and communities within our ecosystem.",
   },
   {
-    question: "How do I mint a .creator domain?",
+    question: "How do I mint a .safu domain?",
     answer:
-      "You can mint your .creator domain directly through our platform. Navigate to the 'Mint .creator Domain' section, search for your desired name, and follow the simple steps. It's a quick process integrated with blockchain technology.",
+      "You can mint your .safu domain directly through our platform. Navigate to the 'Mint .safu Domain' section, search for your desired name, and follow the simple steps. It's a quick process integrated with blockchain technology.",
   },
   {
-    question: "What are the benefits of Level3 courses?",
+    question: "What are the benefits of SafuAcademy courses?",
     answer:
-      "Our courses are AI-powered and tailored for Web3 creators. You get personalized learning paths, practical skills applicable in the creator economy, and access to a supportive community. Plus, many courses offer exclusive content for .creator domain holders.",
+      "Our courses are AI-powered and tailored for Web3 creators. You get personalized learning paths, practical skills applicable in the creator economy, and access to a supportive community. Plus, many courses offer exclusive content for .safu domain holders.",
   },
   {
     question: "Is there a refund policy for courses?",
@@ -50,7 +50,9 @@ const FaqSection = () => {
         >
           <div className="inline-flex items-center px-4 py-1.5 rounded-full glass-effect mb-3 border border-primary/30 shadow-sm">
             <HelpCircle className="w-5 h-5 text-primary mr-2" />
-            <span className="text-sm font-medium text-slate-200">FAQ Hub</span>
+            <span className="text-sm font-semibold text-slate-200">
+              FAQ Hub
+            </span>
           </div>
         </motion.div>
         <motion.h2
@@ -103,12 +105,12 @@ const FaqSection = () => {
               size="lg"
               className="w-full bg-gradient-to-r from-primary to-orange-400 hover:from-orange-500 hover:to-primary text-background font-semibold text-md px-6 py-3 rounded-lg shadow-lg hover:shadow-primary/40 transition-all duration-300 transform hover:scale-105 group"
             >
-              <Link to="/contact">
+              <a href="https://discord.gg/Sj8fBeSy4D">
                 {" "}
                 {/* Assuming you have a contact page route */}
-                Contact Us{" "}
+                Join Our Discord{" "}
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              </a>
             </Button>
             <Link
               to="/courses/all"

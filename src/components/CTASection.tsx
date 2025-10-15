@@ -24,9 +24,9 @@ const CTASection = () => {
           </h2>
           <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
             The future of content creation is decentralized, AI-powered, and
-            community-driven. Join Level3, mint your{" "}
+            community-driven. Join SafuAcademy, mint your{" "}
             <code className="text-primary font-bold p-1.5 rounded-md bg-primary/10 shadow-sm">
-              .creator
+              .safu
             </code>{" "}
             domain, and step into your power.
           </p>
@@ -37,7 +37,7 @@ const CTASection = () => {
                 className="bg-gradient-to-r from-primary to-orange-400 hover:from-orange-500 hover:to-primary text-background font-semibold text-lg px-10 py-5 rounded-xl shadow-xl hover:shadow-primary/50 transition-all duration-300 transform hover:scale-105 neon-glow"
               >
                 <LinkIcon className="w-6 h-6 mr-3" />
-                Mint Your .creator Domain
+                Mint Your .safu Domain
               </Button>
             </RouterLink>
             <RouterLink to="/courses">

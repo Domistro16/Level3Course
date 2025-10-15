@@ -6,66 +6,8 @@ import CoursesLandingPage from "@/pages/CoursesLandingPage";
 import CourseListPage from "@/pages/CourseListPage";
 import CourseDetailPage from "@/pages/CourseDetailPage";
 import ScrollToTop from "@/components/ScrollToTop";
-import { useEffect } from "react";
 import LessonPlayer from "@/pages/LessonPage";
-import { useWeb3Auth } from "@web3auth/modal/react";
 function App() {
-  const { status, isConnected } = useWeb3Auth();
-
-  useEffect(() => {
-    console.log("Web3Auth status:", status);
-    console.log("isConnected:", isConnected);
-  }, [status, isConnected]);
-
-  useEffect(() => {
-    console.log("Web3Auth status:", status);
-    console.log("isConnected:", isConnected);
-  }, [status, isConnected]);
-  useEffect(() => {
-    const AUTH_ORIGIN = "https://auth.level3labs.fun";
-
-    // Create or reuse iframe
-    let iframe = document.getElementById(
-      "auth-sync-iframe"
-    ) as HTMLIFrameElement;
-    if (!iframe) {
-      iframe = document.createElement("iframe");
-      iframe.style.display = "none";
-      iframe.id = "auth-sync-iframe";
-      iframe.src = AUTH_ORIGIN;
-      document.body.appendChild(iframe);
-    }
-
-    // Sync function
-    const syncLocalStorage = () => {
-      if (iframe.contentWindow) {
-        iframe.contentWindow.postMessage(
-          JSON.stringify({
-            type: "SET_SESSION",
-            object: Object.fromEntries(Object.entries(localStorage)),
-          }),
-          AUTH_ORIGIN
-        );
-      }
-    };
-
-    // When iframe loads
-    iframe.onload = () => {
-      if (isConnected) {
-        syncLocalStorage();
-      }
-    };
-
-    // Re-sync every 10 seconds
-    const interval = setInterval(() => {
-      if (isConnected) {
-        syncLocalStorage();
-      }
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, [isConnected]);
-
   return (
     <>
       <ScrollToTop />

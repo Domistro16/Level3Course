@@ -55,7 +55,7 @@ export default defineConfig({
             "videojs-http-source-selector",
           ],
           wagmi: ["wagmi"],
-          rainbowMe: ["@rainbow-me/rainbowkit"],
+          rainbowme: ["@rainbow-me/rainbowkit"],
         },
       },
     },

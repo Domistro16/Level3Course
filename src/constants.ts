@@ -1,5 +1,5 @@
-export const ERC2771Forwarder = "0x52C0De18D999E11436776fa45800bb92d57b752c";
-export const Deploy = "0x654C0868c73068E38065bb1462Fcef2d60B89038";
+export const ERC2771Forwarder = "0xa579e4F7158826e4C0E6842779580f524bD6188C";
+export const Deploy = "0xC41c1F9d985591Ec55F24b06eF9FBf34cAF5bB16";
 
 export interface Lesson {
   id: number;
@@ -142,18 +142,13 @@ export const abi = [
         name: "",
         type: "uint256",
       },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
     ],
-    name: "completedLessons",
+    name: "completedCourses",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "bool",
         name: "",
-        type: "uint256",
+        type: "bool",
       },
     ],
     stateMutability: "view",
@@ -390,11 +385,6 @@ export const abi = [
         type: "uint8",
       },
       {
-        internalType: "uint256[]",
-        name: "lessonIds",
-        type: "uint256[]",
-      },
-      {
         internalType: "uint256",
         name: "attendees",
         type: "uint256",
@@ -504,6 +494,25 @@ export const abi = [
     inputs: [
       {
         internalType: "address",
+        name: "_user",
+        type: "address",
+      },
+    ],
+    name: "getUserPoints",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "forwarder",
         type: "address",
       },
@@ -583,6 +592,25 @@ export const abi = [
         internalType: "address",
         name: "",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "points",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -781,14 +809,19 @@ export const abi = [
         type: "uint256",
       },
       {
-        internalType: "uint256",
-        name: "_lessonId",
-        type: "uint256",
-      },
-      {
         internalType: "uint8",
         name: "_progress",
         type: "uint8",
+      },
+      {
+        internalType: "address",
+        name: "_user",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_points",
+        type: "uint256",
       },
     ],
     name: "updateCourseProgress",

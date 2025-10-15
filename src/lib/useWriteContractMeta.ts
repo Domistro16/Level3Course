@@ -290,7 +290,6 @@ export function useGaslessContractWrite() {
   const relayerUrl = import.meta.env.VITE_RELAYER_URL;
 
   // 1. Fetch forwarder nonce for this user
-  console.log(userAddress);
   const {
     data: nonceData,
     isLoading: nonceLoading,
@@ -358,7 +357,7 @@ export function useGaslessContractWrite() {
           to: targetAddress,
           value: 0,
           gas: gasLimit,
-          nonce,
+          nonce: nonce,
           deadline,
           data: targetCalldata,
         };
@@ -369,7 +368,6 @@ export function useGaslessContractWrite() {
           chainId: 97,
           verifyingContract: ERC2771Forwarder as `0x${string}`,
         };
-        console.log(domain);
         // Prompt user to sign EIP-712 typed ForwardRequest
         const types = {
           ForwardRequest,

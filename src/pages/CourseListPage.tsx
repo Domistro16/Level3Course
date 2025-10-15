@@ -38,7 +38,6 @@ const CourseListPage = () => {
     data: Course[];
     isPending: boolean;
   };
-  console.log(courses);
   const fallbackCourses: Course[] = courses ?? [];
   const { data: participants } = useReadContract({
     abi,
@@ -47,8 +46,6 @@ const CourseListPage = () => {
   }) as {
     data: number[];
   };
-
-  console.log(participants);
 
   const levels = [
     "all",
@@ -110,8 +107,6 @@ const CourseListPage = () => {
     () => fallbackCourses?.filter((c) => c.category === "Premium").slice(0, 3),
     [fallbackCourses]
   );
-
-  console.log(courses);
 
   const Section = ({
     title,
@@ -212,12 +207,12 @@ const CourseListPage = () => {
         <div className="relative z-10 max-w-4xl mx-auto">
           <div className="inline-flex items-center px-5 py-2.5 rounded-full glass-effect mb-6 border border-primary/30 shadow-lg">
             <Sparkles className="w-5 h-5 text-primary mr-2.5" />
-            <span className="text-sm font-medium text-gray-200">
+            <span className="text-sm font-semibold text-gray-200">
               Your Gateway to Web3 Mastery
             </span>
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
-            The Level3{" "}
+            The SafuAcademy{" "}
             <span className="primary-gradient-text">Course Catalog</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
@@ -324,7 +319,7 @@ const CourseListPage = () => {
                 <div>
                   <label
                     htmlFor="categoryFilter"
-                    className="block text-sm font-medium text-gray-300 mb-1.5"
+                    className="block text-sm font-semibold text-gray-300 mb-1.5"
                   >
                     Category
                   </label>
@@ -351,7 +346,7 @@ const CourseListPage = () => {
                 <div>
                   <label
                     htmlFor="levelFilter"
-                    className="block text-sm font-medium text-gray-300 mb-1.5"
+                    className="block text-sm font-semibold text-gray-300 mb-1.5"
                   >
                     Level
                   </label>
@@ -375,7 +370,7 @@ const CourseListPage = () => {
                 <div>
                   <label
                     htmlFor="durationFilter"
-                    className="block text-sm font-medium text-gray-300 mb-1.5"
+                    className="block text-sm font-semibold text-gray-300 mb-1.5"
                   >
                     Duration
                   </label>

@@ -1,46 +1,48 @@
-import { BigNumberish } from "ethers"
+import { BigNumberish } from "ethers";
 
 export const constants = {
-  Controller: '0xB85759dd66E5554bf4Fc0e19cc71eC11e0f3FE2E' as `0x${string}`,
-  Registry: '0x8390D472587cCAe988dD06Ccd456Ac70CcF39038' as `0x${string}`,
+  Controller: "0x101197c1bed7efDb6fBa1df03537EEFB04AafbDa" as `0x${string}`,
+  Registry: "0x6aEFc7ac590096c08187a9052030dA59dEd7E996" as `0x${string}`,
   ReverseRegistrar:
-    '0x2E5ba310fDa0aD5dfA4CC5656FAEDDd4CC4c162b' as `0x${string}`,
-  BaseRegistrar: '0x0393da9525982Be4C8b9812f8D2A877796fCA90b' as `0x${string}`,
-  NameWrapper: '0x399c16D8156E1145912c106DD811702440242B93' as `0x${string}`,
-  BulkRenewal: '0xB3aad8586b4796960060d0FaCBA8e001Ec7ecB7d' as `0x${string}`,
-  PublicResolver: '0xe3b0181a7c7F5fA0dE6894062Ae2f15bFb41E283' as `0x${string}`,
-}
+    "0xc070aAcE207ad5eb2A460D059785ffC9D4D2C536" as `0x${string}`,
+  BaseRegistrar: "0xc85f95FCe09b582D546606f591CEEC88D88714f5" as `0x${string}`,
+  NameWrapper: "0x86a930d1931C11e3Ec46b3A050E27F29bF94B612" as `0x${string}`,
+  BulkRenewal: "0x32f3f7D65282d8941FE12b00b63a708e9333fC06" as `0x${string}`,
+  PublicResolver: "0x02A27Cc05f5496831B3C050786689221c0ABF9c8" as `0x${string}`,
+  Referral: "0x182690bD985ef02Ae44A6F8a2e71666bDe1196E2" as `0x${string}`,
+  Course: "0x2967A3EDA537630Fb4eb144Fa02f5081457506BE" as `0x${string}`,
+};
 
 export interface Params {
   /** The name to register */
-  name: string
+  name: string;
 
   /** Owner address (20-byte hex) */
-  owner: `0x${string}`
+  owner: `0x${string}`;
 
   /** Registration duration in seconds (uint256) */
-  duration: BigNumberish
+  duration: BigNumberish;
 
   /** Secret commitment (32-byte hex) */
-  secret: string
+  secret: string;
 
   /** Resolver contract address */
-  resolver: string
+  resolver: string;
 
   /** Array of ABI-encoded data blobs */
-  data: string[]
+  data: string[];
 
   /** Whether to set up a reverse record */
-  reverseRecord: boolean
+  reverseRecord: boolean;
 
   /** Owner-controlled fuses bitmap (fits in uint16) */
-  ownerControlledFuses: number
+  ownerControlledFuses: number;
 }
 
 export interface TokenParams {
   /** Token symbol or identifier */
-  token: string
+  token: string;
 
   /** Token contract address */
-  tokenAddress: string
+  tokenAddress: string;
 }

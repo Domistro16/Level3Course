@@ -1,74 +1,88 @@
-import { Github, Twitter, Linkedin, Send } from 'lucide-react';
+// @ts-nocheck
+import React from "react";
+import { FaDiscord, FaTiktok } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 
 const Footer = () => {
-  const socialLinks = [
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Github, href: "#", label: "GitHub" },
-    { icon: Send, href: "#", label: "Telegram" },
-  ];
+   const socialLinks = [
+     { icon: FaXTwitter, href: "https://x.com/safuverse", label: "Twitter" },
+     {
+       icon: FaTiktok,
+       href: "https://www.tiktok.com/@level3ai",
+       label: "Tiktok",
+     },
+     {
+       icon: FaDiscord,
+       href: "https://discord.gg/Sj8fBeSy4D",
+       label: "Discord",
+     },
+   ];
 
   const footerSections = [
     {
       title: "Platform",
-      links: ["AI Courses", "Earn Crypto", ".creator Domains", "Community Hub", "Leaderboards"]
+      links: [
+        "AI Courses",
+        "Earn Crypto",
+        ".safu Domains",
+        "Community Hub",
+        "Leaderboards",
+      ],
     },
     {
       title: "Company",
-      links: ["About Us", "Careers", "Blog", "Press Kit", "Partnerships"]
+      links: ["About Us", "Careers", "Blog", "Press Kit", "Partnerships"],
     },
     {
       title: "Support",
-      links: ["Help Center", "Documentation", "Contact Us", "FAQs", "Status Page"]
+      links: [
+        "Help Center",
+        "Documentation",
+        "Contact Us",
+        "FAQs",
+        "Status Page",
+      ],
     },
     {
       title: "Legal",
-      links: ["Privacy Policy", "Terms of Service", "Cookie Policy", "Disclaimer"]
-    }
+      links: [
+        "Privacy Policy",
+        "Terms of Service",
+        "Cookie Policy",
+        "Disclaimer",
+      ],
+    },
   ];
-
   return (
-    <footer className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 border-t border-border/30 bg-background/70">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
-          <div className="lg:col-span-2">
-            <a href="#" className="flex items-center space-x-2.5 mb-5">
-              <img className='h-10' src='/Level3.png'/>
-            </a>
-            <p className="text-md text-gray-400 mb-6 max-w-md">
-              Empowering the next generation of Web3 content creators with AI-driven learning and decentralized earning opportunities.
-            </p>
-            <div className="flex space-x-5">
-              {socialLinks.map(social => (
-                <a key={social.label} href={social.href} aria-label={social.label} className="text-gray-500 hover:text-primary transition-colors duration-200">
-                  <social.icon size={22} />
-                </a>
-              ))}
-            </div>
-          </div>
+    <footer className="py-16 md:py-20  border-t-[0.2px] border-gray-500 px-4 sm:px-6 lg:px-8 rounded-t-full bg-gradient-to-b from-purple-950/20 to-background/70">
+      <div className="flex flex-col gap-9 items-center pb-10">
+        <div className="flex justify-center">
+          <img src="/Safuverse.png" className="h-10" />
+        </div>
+        <p className="text-center w md:w-[40%] font-semibold">
+          Empowering the next generation of Web3 content creators with AI-driven
+          learning and decentralized earning opportunities.
+        </p>
 
-          {footerSections.slice(0,3).map(section => (
-             <div key={section.title}>
-              <span className="text-lg font-semibold mb-5 block text-gray-100">{section.title}</span>
-              <ul className="space-y-2.5">
-                {section.links.map(link => (
-                  <li key={link}>
-                    <a href="#" className="text-sm text-gray-400 hover:text-primary hover:underline transition-colors duration-200 underline-offset-4">
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+        <div className="flex space-x-5">
+          {socialLinks.map((social) => (
+            <a
+              key={social.label}
+              href={social.href}
+              aria-label={social.label}
+              className="text-gray-500 hover:text-primary transition-colors duration-200"
+            >
+              <social.icon size={22} />
+            </a>
           ))}
         </div>
-
-        <div className="border-t border-border/30 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm text-gray-500 mb-4 md:mb-0">
-            © {new Date().getFullYear()} Level3 Labs. All rights reserved.
+        <div className=" flex flex-col md:flex-row justify-between pt-3 md:gap-5 items-center">
+          <p className="text-sm text-whit mb-4 md:mb-0">
+            © {new Date().getFullYear()} SafuAcademy Labs
           </p>
-          <p className="text-sm text-gray-500">
-            Built with <span className="text-primary">&hearts;</span> for the Decentralized Future.
+          <p className="text-sm text-white">
+            Product of{" "}
+            <span className="text-[#FFB000] font-bold">Level 3 Labs</span>
           </p>
         </div>
       </div>

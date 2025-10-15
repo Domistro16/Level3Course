@@ -38,7 +38,6 @@ type UserType = [
   bigint
 ];
 
-
 const CourseCard = ({
   course,
   animationDelay = 0,
@@ -49,7 +48,7 @@ const CourseCard = ({
   const IconComponent = getRandomIcon(course.title) || Target;
   // Mock enrollment for card display: For demo, let's assume no course is pre-enrolled on general cards
   // Actual enrollment state would come from user context or props
-  const {address} = useAccount()
+  const { address } = useAccount();
   const { data: userCourse } = useReadContract({
     abi: abi,
     functionName: "getCourse",
@@ -76,7 +75,7 @@ const CourseCard = ({
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.6, delay: animationDelay, ease: "easeOut" }}
       viewport={{ once: true, amount: 0.3 }}
-      className="glass-effect rounded-xl overflow-hidden group card-hover-effect flex flex-col h-full cursor-pointer"
+      className="glass-effect rounded-xl overflow-hidden group card-hover-effect flex flex-col h-full cursor-pointer border-1 border-yellow-400 shadow-lg shadow-yellow-400/50 hover:shadow-yellow-300/50 transition-shadow duration-300"
       onClick={() => navigate(`/courses/${course.id}`)}
     >
       <div className="h-52 bg-gradient-to-br from-primary/10 to-orange-400/10 relative overflow-hidden">
@@ -96,7 +95,7 @@ const CourseCard = ({
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card via-card/70 to-transparent p-4 flex items-end justify-between">
           <div className="flex items-center space-x-2">
             <IconComponent className="w-5 h-5 text-primary" />
-            <span className="text-xs text-gray-200 font-medium">
+            <span className="text-xs text-gray-200 font-semibold">
               {course.duration} minutes
             </span>
           </div>
@@ -116,7 +115,7 @@ const CourseCard = ({
           {course.title}
         </h3>
         <p className="text-sm text-gray-400 mb-5 line-clamp-3 flex-grow min-h-[60px]">
-          {course.description.split(" Access with .creator domain.")[0]}
+          {course.description.split(" Access with .safu domain.")[0]}
         </p>
         <div className="mt-auto">
           <Link to={`/courses/${course.id}`} className="block">
@@ -127,7 +126,7 @@ const CourseCard = ({
           </Link>
           {!isEnrolled && (
             <p className="text-xs text-amber-400 mt-2 text-center flex items-center justify-center">
-              <Lock size={12} className="mr-1" /> Mint .creator domain to enroll
+              <Lock size={12} className="mr-1" /> Mint .safu domain to enroll
             </p>
           )}
         </div>

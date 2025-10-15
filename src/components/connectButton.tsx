@@ -28,6 +28,10 @@ export const CustomConnect = () => {
           account &&
           chain &&
           (!authenticationStatus || authenticationStatus === "authenticated");
+
+        if (!connected && location.pathname != "/") {
+          openConnectModal();
+        }
         return (
           <div
             {...(!ready && {
@@ -43,28 +47,32 @@ export const CustomConnect = () => {
               if (!connected) {
                 return (
                   <button
-                    className="bg-blue-800 p-3 py-[8px] font-bold rounded-full hover:scale-105 duration-200 cursor-pointer"
-                    onClick={openConnectModal}
+                    className="bg-[#FFB000] p-8 py-[8px] text-black font-bold rounded-full hover:scale-105 duration-200 cursor-pointer"
                     type="button"
+                    onClick={openConnectModal}
                   >
-                    Connect Wallet
+                    Login
                   </button>
                 );
               }
               if (chain.unsupported) {
                 return (
-                  <button onClick={openChainModal} type="button">
-                    Wrong network
+                  <button
+                    onClick={openChainModal}
+                    type="button"
+                    className="bg-neutral-950 p-4 py-[10px] rounded-full cursor-pointer flex gap-2 items-center hover:scale-105 duration-200 font-bold text-red-500"
+                  >
+                    Wrong network!
                   </button>
                 );
               }
               return (
                 <div
-                  className="w-full font-semibold cursor-pointer hover:scale-105 duration-200"
+                  className=" font-bold cursor-pointer hover:scale-105 duration-200"
                   style={{ display: "flex", gap: 12 }}
                 >
                   <button
-                    className="bg-slate-800 font-semibold p-3 py-[8px] rounded-full cursor-pointer flex gap-2 items-center hover:scale-105 duration-200"
+                    className="bg-neutral-950 p-3 py-[8px] rounded-full cursor-pointer flex gap-2 items-center hover:scale-105 duration-200"
                     onClick={() => {
                       setIsOpen(true);
                     }}
@@ -79,11 +87,9 @@ export const CustomConnect = () => {
                       className="w-8 h-8"
                     />
                     {name ? (
-                      <div className="font-bold md:flex">{name as string}</div>
+                      <div className="">{name as string}</div>
                     ) : (
-                      <div className="font-extrabold md:flex">
-                        {account.displayName}
-                      </div>
+                      <div className="">{account.displayName}</div>
                     )}
                   </button>
 

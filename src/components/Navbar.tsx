@@ -2,19 +2,12 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { X, BookOpen } from "lucide-react";
-import { Link, NavLink, useLocation } from "react-router-dom";
-import { CustomConnect } from "./connectButton";
-import LogInButton from "./LoginButton";
-import { useAccount } from "wagmi";
-import SignIn from "./Login";
+import { NavLink } from "react-router-dom";
+import { CustomConnect } from "@/components/connectButton";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isConnected, isDisconnected } = useAccount();
-  const [loggedIn, setLoggedIn] = useState(isDisconnected);
-  const location = useLocation();
-  const [showOnRoot, setShowOnRoot] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,9 +18,14 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { to: "/coming-soon", label: "Earn", isExternal: false },
+    { to: "/", label: "", isExternal: false },
     {
-      href: "https://dns.level3labs.fun/",
+      href: "https://safuverse.gitbook.io/safuverse-docs/",
+      label: "Docs",
+      isExternal: true,
+    },
+    {
+      href: "https://names.safuverse.com/",
       label: "Mint Domain",
       isExternal: true,
     },
@@ -41,11 +39,11 @@ const Navbar = () => {
       animate={{ opacity: 1, y: 0 }} // Animation to visible state
       transition={{ duration: 0.7, ease: "easeOut" }} // Animation transition properties
       // Adjusted background color to the specific hex code #141b33
-      className={`fixed top-4 left-0 right-0 max-w-6xl mx-auto z-50 transition-all duration-300 px-1 sm:pl-6 lg:pl-8
+      className={`fixed top-4 left-0 right-0 max-w-6xl mx-auto z-50 transition-all duration-300 px-4 sm:pl-6 lg:pl-8
                   ${
                     isScrolled || mobileMenuOpen
-                      ? "bg-[#141b33] py-2 shadow-xl"
-                      : "bg-[#141b33] py-1 shadow-lg"
+                      ? "bg-neutral-900 py-2 shadow-xl"
+                      : "bg-neutral-900 py-1 shadow-lg"
                   }  ${mobileMenuOpen ? "rounded-sm" : "rounded-full"}
         
                  `}
@@ -54,21 +52,21 @@ const Navbar = () => {
         <div className="flex items-center gap-2">
           {}
           <div className="hidden md:flex items-center">
-            <div className="bg-slate-900 rounded-full p-3 flex flex-col justify-center w-12 h-12 cursor-pointer">
+            <div className="bg-neutral-950 rounded-full p-3 flex flex-col justify-center w-12 h-12 cursor-pointer">
               <div className="border-[#FFB000] border-b-[2px] w-6"></div>
               <div className="border-[#FFB000] border-b-[2px] w-4 mt-3"></div>
             </div>
           </div>
-          <Link to="/" className="flex items-center gap-1.5">
+          <a href="https://safuverse.com" className="flex items-center gap-1.5">
             <img
-              src="/Level3.png"
+              src="/Safuverse.png"
               className="text-xl font-bold text-[#FFB000] h-10 hidden lg:block"
             />
             <img
               src="/small.png"
               className="text-xl font-bold text-[#FFB000] h-14 lg:hidden block"
             />
-          </Link>
+          </a>
         </div>
 
         {}
@@ -113,15 +111,7 @@ const Navbar = () => {
           </NavLink>
           <div className="hidden md:flex -ml-4">
             {" "}
-            {isConnected ? (
-              <CustomConnect />
-            ) : (
-              <LogInButton
-                setLoggedIn={setLoggedIn}
-                loggedIn={loggedIn}
-                setShowOnRoot={setShowOnRoot}
-              />
-            )}
+            <CustomConnect />
           </div>
         </div>
 
@@ -136,7 +126,7 @@ const Navbar = () => {
               <X size={26} />
             ) : (
               <div className="items-center">
-                <div className="bg-slate-900 rounded-full p-3 flex flex-col justify-center w-12 h-12 cursor-pointer">
+                <div className="bg-neutral-950 rounded-full p-3 flex flex-col justify-center w-12 h-12 cursor-pointer">
                   <div className="border-[#FFB000] border-b-[2px] w-6"></div>
                   <div className="border-[#FFB000] border-b-[2px] w-4 mt-3"></div>
                 </div>
@@ -152,7 +142,7 @@ const Navbar = () => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          className="md:hidden bg-[#141b33] py-3 shadow-lg rounded-lg"
+          className="md:hidden bg-neutral-900 py-3 shadow-lg rounded-lg"
         >
           <div className="flex flex-col items-center space-y-4">
             {navLinks.map((link) =>
@@ -193,20 +183,9 @@ const Navbar = () => {
               <BookOpen className="w-4 h-4 mr-2" />
               View Courses
             </NavLink>
-            {isConnected ? (
-              <CustomConnect />
-            ) : (
-              <LogInButton
-                setLoggedIn={setLoggedIn}
-                loggedIn={loggedIn}
-                setShowOnRoot={setShowOnRoot}
-              />
-            )}
+            <CustomConnect />
           </div>
         </motion.div>
-      )}
-      {loggedIn && (location.pathname !== "/" || showOnRoot) && (
-        <SignIn loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
       )}
     </motion.nav>
   );

@@ -1,6 +1,7 @@
 export async function getProgress(address: string, courseId: number) {
-  const response = await fetch(
-    `https://seal-app-zivs6.ondigitalocean.app/api/progress/${address}/${courseId}`,
+  const response = await fetch(`${
+      import.meta.env.VITE_API_URL
+    }progress/${address}/${courseId}`,
     {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -15,13 +16,16 @@ export async function updateProgress(
   courseId: number,
   lessonIndex: number
 ) {
-  await fetch("https://seal-app-zivs6.ondigitalocean.app/api/progress/update", {
+  await fetch(`${import.meta.env.VITE_API_URL}progress/update`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": import.meta.env.VITE_API_KEY,
+    },
     body: JSON.stringify({
       userId: address,
       courseId,
-      lessonIndex,
+      lessonIndex
     }),
   });
 }

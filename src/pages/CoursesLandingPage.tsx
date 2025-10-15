@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import CourseCard from "@/components/CourseCard";
 import FaqSection from "@/components/FaqSection"; // Import the new FAQ section
 import { abi, Deploy, type Course } from "@/constants";
-import { useReadContract, useAccount } from "wagmi";
+import { useReadContract } from "wagmi";
 
 const CoursesLandingPage = () => {
   const { data: courses, isPending } = useReadContract({
@@ -16,13 +16,10 @@ const CoursesLandingPage = () => {
     data: Course[];
     isPending: boolean;
   };
-  console.log(isPending);
-  const account = useAccount();
-  console.log(account.address);
-  console.log(courses);
 
-  const featuredCourses = courses?.filter((course) => course.id == 4n)
-    .concat(courses.slice(1, 3));
+  const featuredCourses = courses?.filter(
+    (course) => course.id == 3n || course.id == 0n || course.id == 1n
+  );
 
   return (
     <div className="min-h-screen crypto-pattern">
@@ -37,7 +34,7 @@ const CoursesLandingPage = () => {
         <div className="relative z-10 max-w-4xl mx-auto">
           <div className="inline-flex items-center px-5 py-2.5 rounded-full glass-effect mb-6 border border-primary/30 shadow-lg">
             <Sparkles className="w-5 h-5 text-primary mr-2.5" />
-            <span className="text-sm font-medium text-gray-200">
+            <span className="text-sm font-semibold text-gray-200">
               Level Up Your Skills
             </span>
           </div>
@@ -49,7 +46,7 @@ const CoursesLandingPage = () => {
             Human curated, AI presented courses available in 32 languages.
             Unlocked with your
             <code className="text-primary font-bold p-1.5 rounded-md bg-primary/10 shadow-sm">
-              .creator
+              .safu
             </code>
             digital identity
           </p>
@@ -69,7 +66,7 @@ const CoursesLandingPage = () => {
               className="border-primary/70 text-primary hover:bg-primary/10 hover:border-primary text-md px-8 py-4 rounded-lg transition-all duration-300 transform hover:scale-105 group"
             >
               <Info className="w-5 h-5 mr-2.5" />
-              Why .creator Domain?{" "}
+              Why .safu Domain?{" "}
               <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
@@ -100,7 +97,7 @@ const CoursesLandingPage = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-              {featuredCourses.map((course, index) => (
+              {featuredCourses?.map((course, index) => (
                 <motion.div
                   key={course.id}
                   initial={{ opacity: 0, y: 50, scale: 0.95 }}
@@ -120,7 +117,7 @@ const CoursesLandingPage = () => {
         </div>
       </section>
 
-      {/* Why Level3 Section */}
+      {/* Why SafuAcademy Section */}
       <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-background/50">
         <div className="max-w-5xl mx-auto">
           <motion.div
@@ -132,7 +129,7 @@ const CoursesLandingPage = () => {
           >
             <h2 className="section-title">
               Why Learn with{" "}
-              <span className="primary-gradient-text">Level3?</span>
+              <span className="primary-gradient-text">SafuAcademy?</span>
             </h2>
             <p className="section-subtitle">
               We're redefining Web3 education with cutting-edge AI and a focus
