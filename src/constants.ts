@@ -1,5 +1,5 @@
 export const ERC2771Forwarder = "0xa579e4F7158826e4C0E6842779580f524bD6188C";
-export const Deploy = "0xC41c1F9d985591Ec55F24b06eF9FBf34cAF5bB16";
+export const Deploy = "0xD0cB04cB20Dff62E26b7069B95Fa9fF3D4694d13";
 
 export interface Lesson {
   id: number;
